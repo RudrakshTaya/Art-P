@@ -13,7 +13,10 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Routes for cards 
 app.use('/cards', cardRoutes);
+// Routes for signup/signin
+const authRoutes = require('./src/Routes/auth.Routes');
+app.use('/api', authRoutes);
 
 module.exports = app;
