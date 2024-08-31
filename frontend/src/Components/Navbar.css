@@ -1,0 +1,63 @@
+/* Basic navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    position: relative; /* Ensure proper stacking context */
+    z-index: 10; /* Ensure navbar is above other content */
+}
+
+.navbar-brand a {
+    font-size: 24px;
+    text-decoration: none;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none; /* Remove underline */
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ff6347; /* Change color on hover */
+}
+
+/* Mobile menu toggle */
+.nav-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 11; /* Ensure toggle button is above other content */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        top: 60px; /* Adjust based on navbar height */
+        left: 0;
+        right: 0;
+        background-color: #333;
+        flex-direction: column;
+        display: none;
+        z-index: 9; /* Ensure links are above other content */
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+}
