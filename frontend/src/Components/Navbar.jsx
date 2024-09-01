@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './useAuth';
 import './Navbar.css';
-//import { useAuth } from './useAuth';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    // const { isLoggedIn, username } = useAuth();
+    const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State for logout popup
+    const { isLoggedIn,  signOut } = useAuth(); // Get isLoggedIn and signOut from useAuth
     const location = useLocation();
+    const navigate = useNavigate();
 
     const handleSignInClick = () => {
         localStorage.setItem('redirectPath', location.pathname);
+    };
+
+    const handleLogout = () => {
+        signOut();
+        navigate('/'); // Redirect to home or any other page after logout
     };
 
     const toggleMenu = () => {
@@ -25,10 +32,25 @@ const Navbar = () => {
                 <Link to="/Shop">Shop</Link>
                 <Link to="/Challenges">Challenges</Link>
                 <Link to="/Gallery">Gallery</Link>
-             
-               
-                <Link to="/Signin" onClick={handleSignInClick}>Sign In</Link>
-                
+                {!isLoggedIn ? (
+                    <Link to="/Signin" onClick={handleSignInClick}>Sign In</Link>
+                ) : (
+                    <>
+                        <span 
+                            className="username" 
+                            onClick={() => setShowLogoutPopup(!showLogoutPopup)}
+                        >
+                            Rudraksh 
+                        </span>
+                        {showLogoutPopup && (
+                            <div className="logout-popup">
+                                <p>Are you sure you want to logout?</p>
+                                <button onClick={handleLogout}>Yes, Logout</button>
+                                <button onClick={() => setShowLogoutPopup(false)}>Cancel</button>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
             <div className="nav-toggle" onClick={toggleMenu}>
                 ☰

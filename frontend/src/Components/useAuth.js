@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 
-export const useAuth = () => {
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState('');
 
@@ -22,5 +24,17 @@ export const useAuth = () => {
         setUsername(userData.username);
     };
 
-    return { isLoggedIn, username, signIn };
+    const signOut = () => {
+        localStorage.removeItem('user');
+        setIsLoggedIn(false);
+        setUsername('');
+    };
+
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, username, signIn, signOut }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
+
+export const useAuth = () => useContext(AuthContext);

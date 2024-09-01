@@ -6,6 +6,7 @@ import Navbar from './Components/Navbar';
 import Signin from './Components/Signin';
 import Signup from './Components/Signup';
 import './App.css';
+import PrivateRoute from './Components/PrivateRoute'; // Import PrivateRoute
 
 const App = () => {
   return (
@@ -14,11 +15,9 @@ const App = () => {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/Signin" element={<Signin />} />
-            <Route path="/Signup" element={<Signup />} />
-          
-          <Route path="*" element={<h2>404 Page Not Found</h2>} /> {/* Fallback route */}
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/shop" element={<PrivateRoute element={<Shop />} />} />
         </Routes>
       </main>
     </Router>

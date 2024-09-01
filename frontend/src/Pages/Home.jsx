@@ -90,13 +90,13 @@ const Home = () => {
       <section className="intro-image">
         <div className="slideshow">
           {images.map((image, index) => (
-            <a href={image.link} key={index}>
+            <Link to ={image.link} key={index}>
               <img
                 src={image.src}
                 alt={`Intro ${index + 1}`}
                 className={`intro-img ${index === currentImageIndex ? 'active' : ''}`}
               />
-            </a>
+            </Link>
           ))}
         </div>
       </section>

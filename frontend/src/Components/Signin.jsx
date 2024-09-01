@@ -1,6 +1,7 @@
+// src/Components/Signin.js
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
-import { useAuth } from './useAuth'; // Import useAuth
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from './useAuth';
 import './Auth.css';
 
 const Signin = () => {
@@ -11,23 +12,31 @@ const Signin = () => {
 
     const handleSignin = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:5002/api/signin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
+        try {
+            const response = await fetch('http://localhost:5002/api/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const data = await response.json();
-        if (response.ok) {
-            alert('Sign in successful');
-            signIn({ username: data.username, email }); // Call signIn with user data
-            const redirectPath = localStorage.getItem('redirectPath') || '/';
-            localStorage.removeItem('redirectPath');
-            navigate(redirectPath); // Redirect to the stored path or default to '/'
-        } else {
-            alert(data.message);
+            const data = await response.json();
+            if (response.ok) {
+                alert('Sign in successful');
+                // Save the username and email in localStorage
+                signIn({ username: data.username, email: data.email });
+                
+                // Redirect to the stored path or default to home
+                const redirectPath = localStorage.getItem('redirectPath') || '/';
+                localStorage.removeItem('redirectPath');
+                navigate(redirectPath); // Redirect to the stored path or default to '/'
+            } else {
+                alert(data.message || 'An error occurred. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error signing in:', error);
+            alert('An error occurred during sign in. Please try again.');
         }
     };
 
@@ -52,7 +61,7 @@ const Signin = () => {
                 <button type="submit">Sign In</button>
             </form>
             <p>
-                Don't have an account? <Link to="/Signup">Sign Up</Link>
+                Don't have an account? <Link to="/signup">Sign Up</Link>
             </p>
         </div>
     );

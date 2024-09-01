@@ -61,3 +61,46 @@
         display: block;
     }
 }
+
+/* Username styling */
+.username {
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.username:hover {
+    color: #ff6347;
+}
+
+/* Logout popup styling */
+.logout-popup {
+    position: absolute;
+    top: 60px; /* Adjust based on navbar height */
+    right: 20px; /* Adjust based on navbar width */
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 15; /* Ensure popup is above other content */
+}
+
+.logout-popup p {
+    margin: 0 0 10px;
+}
+
+.logout-popup button {
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.logout-popup button:hover {
+    background-color: #ff4500;
+}
