@@ -1,0 +1,46 @@
+.project-detail {
+    padding: 20px;
+  }
+  
+  .project-detail-container {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .project-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .project-info {
+    max-width: 600px;
+  }
+  
+  .project-price {
+    color: #e60023;
+    font-size: 1.5em;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .add-to-cart {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .buy-now {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .reviews {
+    margin-top: 20px;
+  }
+  

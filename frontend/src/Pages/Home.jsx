@@ -107,23 +107,21 @@ const Home = () => {
         </div>
         <div className="card-container">
           {randomCards.map((card, index) => (
-            <Link to={card.link} className="card-link" key={index}>
-              <div className="card">
-                <div>
-                  <img src={card.imgSrc} alt={card.title} className="card-image" />
+            <Link to={`/shop/${card._id}`} className="card-link" key={index}>
+            <div className="card">
+              <img src={card.imgSrc} alt={card.title} className="card-image" />
+              <div className="card-lower">
+                <div className="card-left">
+                  <div className="card-title">{card.title}</div>
+                  <div className="card-body">{card.text}</div>
                 </div>
-                <div className='card-lower'>
-                  <div className='card-left'>
-                    <div className="card-title">{card.title}</div>
-                    <div className="card-body">{card.text}</div>
-                  </div>
-                  <div className='card-right'>
-                    <div className="card-price">{card.price}</div>
-                    <div className="card-rating">{card.rating} ★</div>
-                  </div>
+                <div className="card-right">
+                  <div className="card-price">{card.price}</div>
+                  <div className="card-rating">{card.rating} ★</div>
                 </div>
               </div>
-            </Link>
+            </div>
+          </Link>
           ))}
         </div>
         <div className="view-shop-button">

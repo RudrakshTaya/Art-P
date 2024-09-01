@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const connectDB = require('./src/database/db');
-const Card = require('./src/Models/Cards');
+const Card = require('./src/Models/cards.Models');
 
 const allCards = [
     {
         title: 'Card 1',
         text: 'This is card 1',
         imgSrc: 'https://gratisography.com/wp-content/uploads/2024/01/gratisography-cyber-kitty-800x525.jpg',
-        link: '/#card1', // Add link for each card
+        link: '/card1', // Add link for each card
         price:'$100',
         rating:5
       },
