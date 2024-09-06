@@ -1,33 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './projectDetail.css';
+import { useCart } from '../Context/cartContext'; // Import CartContext for managing cart
+import { useAuth } from '../Components/useAuth'; // Import AuthContext
 
 const ProjectDetailPage = () => {
   const { Product_Id } = useParams();
   const [project, setProject] = useState(null);
   const [error, setError] = useState(null);
+  const [quantity, setQuantity] = useState(1); // State for product quantity
+  const { addToCart } = useCart(); // Access cart context
+  const { userId } = useAuth(); // Get userId from AuthContext
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProject = async () => {
-      if (Product_Id) {
-        try {
-          const response = await fetch(`http://localhost:5002/cards/${Product_Id}`);
-          if (response.ok) {
-            const data = await response.json();
-            setProject(data);
-          } else {
-            setError('Failed to fetch project details');
-          }
-        } catch (error) {
-          setError('Error fetching project details');
+      try {
+        const response = await fetch(`http://localhost:5002/cards/${Product_Id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProject(data);
+        } else {
+          setError('Failed to fetch project details');
         }
-      } else {
-        setError('Invalid project ID');
+      } catch (error) {
+        setError('Error fetching project details');
       }
     };
 
     fetchProject();
   }, [Product_Id]);
+
+  // Modify handleAddToCart in the frontend
+  const handleAddToCart = async () => {
+    if (!userId) {
+      alert('You need to be logged in to add items to the cart.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5002/api/addcart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,           // Include userId
+          productId: project._id,
+          quantity,
+        }),
+      });
+
+      if (response.ok) {
+        addToCart(project, quantity); // Update the cart state
+        alert('Added to cart successfully!');
+        navigate('/cart'); // Redirect to the cart page
+      } else {
+        alert('Failed to add to cart');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
+  // Buy Now functionality
+  const handleBuyNow = async () => {
+    if (!userId) {
+      alert('You need to be logged in to complete the purchase.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5002/api/buy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,           // Include userId
+          productId: project._id,
+        }),
+      });
+
+      if (response.ok) {
+        alert('Purchase successful!');
+        navigate('/confirmation'); // Redirect to confirmation page
+      } else {
+        alert('Failed to complete purchase');
+      }
+    } catch (error) {
+      console.error('Error during purchase:', error);
+    }
+  };
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -47,8 +111,25 @@ const ProjectDetailPage = () => {
           <h1>{project.title}</h1>
           <p>{project.text}</p>
           <h3 className="project-price">${project.price}</h3>
-          <button className="btn add-to-cart">Add to Cart</button>
-          <button className="btn buy-now">Buy Now</button>
+
+          {/* Quantity Input */}
+          <div className="quantity-selector">
+            <label>Quantity: </label>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              min="1"
+            />
+          </div>
+
+          {/* Add to Cart and Buy Now Buttons */}
+          <button className="btn add-to-cart" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+          <button className="btn buy-now" onClick={handleBuyNow}>
+            Buy Now
+          </button>
         </div>
       </div>
       <div className="reviews">

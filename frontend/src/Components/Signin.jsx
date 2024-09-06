@@ -1,4 +1,3 @@
-// src/Components/Signin.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './useAuth';
@@ -24,9 +23,13 @@ const Signin = () => {
             const data = await response.json();
             if (response.ok) {
                 alert('Sign in successful');
-                // Save the username and email in localStorage
-                signIn({ username: data.username, email: data.email });
+                // Save the username, email, and user ID in localStorage
+                const userData = { username: data.username, email: data.email, userId: data.userId };
+                signIn(userData);
                 
+                // Save user ID in local storage
+                localStorage.setItem('userId', data.userId);
+
                 // Redirect to the stored path or default to home
                 const redirectPath = localStorage.getItem('redirectPath') || '/';
                 localStorage.removeItem('redirectPath');

@@ -6,7 +6,7 @@ import './Navbar.css';
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State for logout popup
-    const { isLoggedIn,  signOut ,user} = useAuth(); // Get isLoggedIn and signOut from useAuth
+    const { isLoggedIn, signOut,username } = useAuth(); // Get isLoggedIn and signOut from useAuth
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -32,6 +32,7 @@ const Navbar = () => {
                 <Link to="/Shop">Shop</Link>
                 <Link to="/Challenges">Challenges</Link>
                 <Link to="/Gallery">Gallery</Link>
+                <Link to="/Cart">Cart</Link> {/* Add Cart link */}
                 {!isLoggedIn ? (
                     <Link to="/Signin" onClick={handleSignInClick}>Sign In</Link>
                 ) : (
@@ -40,7 +41,7 @@ const Navbar = () => {
                             className="username" 
                             onClick={() => setShowLogoutPopup(!showLogoutPopup)}
                         >
-                        {user?.username || 'Rudraksh'}
+                            {username || 'Rudraksh'}
                         </span>
                         {showLogoutPopup && (
                             <div className="logout-popup">

@@ -12,19 +12,21 @@ const signup = async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 12); // 12 is the salt rounds
-
-        // Create a new user
+        // Create a new user (password will be hashed in the UserSchema pre-save hook)
         user = new User({
             username,
             email,
-            password, // Store the hashed password
+            password, // Hashing is handled by the pre-save hook
         });
 
         await user.save();
 
-        res.status(201).json({ message: 'User registered successfully', user });
+        res.status(201).json({
+            message: 'User registered successfully',
+            userId: user._id, // Return userId for later use
+            username: user.username,
+            email: user.email
+        });
     } catch (error) {
         console.error('Error during signup:', error); // Log the error for debugging
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -48,7 +50,13 @@ const signin = async (req, res) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
 
-        res.status(200).json({ message: 'Sign in successful', user });
+        // Return user details including userId for session management
+        res.status(200).json({
+            message: 'Sign in successful',
+            userId: user._id, // Include userId for further use
+            username: user.username,
+            email: user.email
+        });
     } catch (error) {
         console.error('Error during signin:', error); // Log the error for debugging
         res.status(500).json({ message: 'Server error', error: error.message });
