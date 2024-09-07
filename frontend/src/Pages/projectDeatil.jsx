@@ -9,6 +9,7 @@ const ProjectDetailPage = () => {
   const [project, setProject] = useState(null);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1); // State for product quantity
+  const [loading, setLoading] = useState(true); // Loading state for better UX
   const { addToCart } = useCart(); // Access cart context
   const { userId } = useAuth(); // Get userId from AuthContext
   const navigate = useNavigate();
@@ -25,16 +26,19 @@ const ProjectDetailPage = () => {
         }
       } catch (error) {
         setError('Error fetching project details');
+      } finally {
+        setLoading(false); // Stop loading once data is fetched or an error occurs
       }
     };
 
     fetchProject();
   }, [Product_Id]);
 
-  // Modify handleAddToCart in the frontend
+  // Handle Add to Cart functionality
   const handleAddToCart = async () => {
     if (!userId) {
       alert('You need to be logged in to add items to the cart.');
+      navigate('/signin'); // Redirect to sign-in page
       return;
     }
 
@@ -63,10 +67,11 @@ const ProjectDetailPage = () => {
     }
   };
 
-  // Buy Now functionality
+  // Handle Buy Now functionality
   const handleBuyNow = async () => {
     if (!userId) {
       alert('You need to be logged in to complete the purchase.');
+      navigate('/signin'); // Redirect to sign-in page
       return;
     }
 
@@ -93,12 +98,12 @@ const ProjectDetailPage = () => {
     }
   };
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (loading) {
+    return <div>Loading...</div>; // Show loading spinner or message
   }
 
-  if (!project) {
-    return <div>Loading...</div>;
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -112,16 +117,16 @@ const ProjectDetailPage = () => {
           <p>{project.text}</p>
           <h3 className="project-price">${project.price}</h3>
 
-          {/* Quantity Input */}
-          <div className="quantity-selector">
-            <label>Quantity: </label>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              min="1"
-            />
-          </div>
+           {/* Quantity Input */}
+           <div className="quantity-selector">
+           <label>Quantity: </label>
+           <input
+             type="number"
+             value={quantity}
+             onChange={(e) => setQuantity(Number(e.target.value))}
+             min="1"
+           />
+         </div>
 
           {/* Add to Cart and Buy Now Buttons */}
           <button className="btn add-to-cart" onClick={handleAddToCart}>

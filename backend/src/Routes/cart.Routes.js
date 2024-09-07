@@ -11,4 +11,9 @@ router.get('/cart/:userId', cartController.getCart);
 // Buy now
 router.post('/buy', cartController.buyNow);
 
+router.post('/removecart', cartController.removeFromCart);
+
+// Route to update the quantity of an item in the cart
+router.post('/updatecart', cartController.updateQuantity);
+
 module.exports = router;

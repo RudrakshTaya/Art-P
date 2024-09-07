@@ -1,13 +1,14 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import { useAuth } from '../Components/useAuth'; // Assuming your authContext is in the same folder
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const { userId } = useAuth(); // Access userId from the auth context
 
-  // Function to fetch the cart from the backend
-  const fetchCart = async () => {
-    const userId = localStorage.getItem('userId');
+  // Memoize the fetchCart function using useCallback
+  const fetchCart = useCallback(async () => {
     if (userId) {
       try {
         const response = await fetch(`http://localhost:5002/api/cart/${userId}`);
@@ -21,15 +22,15 @@ export const CartProvider = ({ children }) => {
         console.error('Error fetching cart:', error);
       }
     }
-  };
-  // Fetch the cart when the component mounts
+  }, [userId]); // Only re-create fetchCart when userId changes
+
+  // Fetch the cart when the user ID changes (i.e., on login or logout)
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [fetchCart]); // Add fetchCart as a dependency (it's now memoized)
 
   // Function to add or update item in the cart
   const addToCart = async (product, quantity) => {
-    const userId = localStorage.getItem('userId');
     if (userId) {
       try {
         await fetch('http://localhost:5002/api/addcart', {
@@ -48,7 +49,6 @@ export const CartProvider = ({ children }) => {
 
   // Function to remove item from the cart
   const removeFromCart = async (productId) => {
-    const userId = localStorage.getItem('userId');
     if (userId) {
       try {
         await fetch('http://localhost:5002/api/removecart', {
@@ -67,7 +67,6 @@ export const CartProvider = ({ children }) => {
 
   // Function to update the quantity of an item
   const updateQuantity = async (productId, quantity) => {
-    const userId = localStorage.getItem('userId');
     if (userId) {
       try {
         await fetch('http://localhost:5002/api/updatecart', {

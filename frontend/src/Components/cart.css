@@ -1,67 +1,110 @@
-/* cart.css */
-
+/* General cart page container styling */
 .cart-page {
   padding: 20px;
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
 }
 
-.cart-items {
-  display: flex;
-  flex-direction: column;
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Cart items list styling */
+ul {
+  list-style: none;
+  padding: 0;
 }
 
 .cart-item {
   display: flex;
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+  margin-bottom: 15px;
 }
 
-.cart-item-image {
+.cart-item img {
   width: 100px;
   height: 100px;
   object-fit: cover;
   margin-right: 20px;
 }
 
-.cart-item-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.item-details {
+  flex: 1;
 }
 
-.quantity-input {
+.item-details h2 {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.item-details p {
+  font-size: 1.2em;
+  color: #333;
+  margin: 5px 0;
+}
+
+input[type="number"] {
   width: 60px;
-  margin: 10px 0;
+  padding: 5px;
+  margin-right: 10px;
 }
 
-.remove-button {
-  background-color: #ff4d4d;
-  color: white;
+button {
+  padding: 10px 15px;
   border: none;
-  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
   cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-.remove-button:hover {
-  background-color: #e60000;
+button:hover {
+  background-color: #0056b3;
 }
 
+/* Cart summary styling */
 .cart-summary {
-  margin-top: 20px;
+  margin-top: 30px;
+  text-align: right;
 }
 
-.checkout-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
+.cart-summary h2 {
+  font-size: 1.5em;
+  margin: 0;
 }
 
-.checkout-button:hover {
-  background-color: #218838;
+.cart-summary p {
+  font-size: 1.2em;
+  color: #333;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item img {
+    width: 8px;
+    height: 8px;
+    margin-bottom: 10px;
+  }
+
+  .item-details h2 {
+    font-size: 1.2em;
+  }
+
+  .item-details p {
+    font-size: 1em;
+  }
+
+  input[type="number"] {
+    width: 50px;
+  }
 }

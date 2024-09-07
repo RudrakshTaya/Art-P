@@ -1,63 +1,66 @@
-import React from 'react';
-import { useCart } from '../Context/cartContext';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useCart } from '../Context/cartContext'; // Import CartContext
 import './cart.css';
-
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity } = useCart();
-  const navigate = useNavigate();
+  const [error] = useState(null);
 
-  const handleCheckout = () => {
-    navigate('/checkout'); // Redirect to checkout page
-  };
-
-  const handleQuantityChange = (Product_Id, quantity) => {
-    if (quantity < 1) {
-      removeFromCart(Product_Id); // Remove item if quantity is less than 1
-    } else {
-      updateQuantity(Product_Id, quantity);
+  // Check if cart data is defined and has the expected format
+  useEffect(() => {
+    if (cart) {
+      console.log('Cart items:', cart);
     }
+  }, [cart]);
+
+  // Calculate total price, checking for undefined or null values
+  const calculateTotalPrice = () => {
+    return cart.reduce((total, item) => {
+      if (item && item.productId && item.productId.price && item.quantity) {
+        return total + (item.productId.price * item.quantity);
+      }
+      return total;
+    }, 0);
   };
 
-  // Calculate total price with defensive checks
-  const totalPrice = cart.reduce((total, item) => {
-    // Check if item.product and item.product.price are defined
-    const price = item.product && item.product.price ? parseFloat(item.product.price) : 0;
-    return total + (price * item.quantity);
-  }, 0).toFixed(2);
+  // Handle quantity change
+  const handleQuantityChange = (productId, quantity) => {
+    updateQuantity(productId, quantity);
+  };
+
+  if (!cart) {
+    return <div>Loading cart...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="cart-page">
-      <h1>Shopping Cart</h1>
-      {cart.length === 0 ? (
-        <p>Your cart is empty</p>
-      ) : (
-        <div className="cart-items">
-          {cart.map(({ product, quantity }) => (
-            // Defensive check to avoid accessing properties of undefined
-            product ? (
-              <div key={product._id} className="cart-item">
-                <img src={product.imgSrc || 'default-image-url.jpg'} alt={product.title} className="cart-item-image" />
-                <div className="cart-item-info">
-                  <h2>{product.title || 'No Title'}</h2>
-                  <p>${product.price || '0.00'}</p>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => handleQuantityChange(product._id, Number(e.target.value))}
-                    min="1"
-                  />
-                  <button onClick={() => removeFromCart(product._id)}>Remove</button>
-                </div>
+      <h1>Your Cart</h1>
+      <ul>
+        {cart.map((item) => (
+          <li key={item._id}>
+            <div className="cart-item">
+              <img src={item.productId.imgSrc} alt={item.productId.title} />
+              <div className="item-details">
+                <h2>{item.productId.title}</h2>
+                <p>${item.productId.price}</p>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  min="1"
+                  onChange={(e) => handleQuantityChange(item.productId._id, Number(e.target.value))}
+                />
+                <button onClick={() => removeFromCart(item._id)}>Remove</button>
               </div>
-            ) : null
-          ))}
-          <div className="cart-summary">
-            <h2>Total: ${totalPrice}</h2>
-            <button onClick={handleCheckout}>Proceed to Checkout</button>
-          </div>
-        </div>
-      )}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div className="cart-summary">
+        <h2>Total Price: ${calculateTotalPrice().toFixed(2)}</h2>
+      </div>
     </div>
   );
 };
