@@ -26,7 +26,7 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="navbar-brand">
-                <Link to="/">Brand</Link>
+                <Link to="/">Craft Aura</Link>
             </div>
             <div className={`nav-links ${isOpen ? 'open' : ''}`}>
                 <Link to="/Shop">Shop</Link>

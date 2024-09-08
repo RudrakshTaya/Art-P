@@ -1,0 +1,103 @@
+
+.card-section {
+    padding: 20px;
+    background-color: beige;
+  }
+  
+  .section-heading {
+    margin-top: -45px;
+   
+   
+    
+  }
+  
+  .section-heading h2 {
+    font-size: 2.8rem;
+    margin-left: 12%;
+    font-weight: 300;
+    font-family:'Times New Roman', Times, serif;
+   
+  }
+  
+  .card-container {
+    
+    
+    
+    
+    margin-top: -20px;
+    background-color: white;
+  }
+  .card-container-items{
+    display: flex;
+    gap: 70px;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    
+  
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+    max-height: auto;
+    justify-content:space-between ;
+    transition: transform 0.2s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+  }
+  .card-link {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Inherit color from parent */
+  }
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-image {
+    width: 88%;
+    height: 250px;
+    object-fit: cover;
+   margin: 18px 0px 0px 18px;
+   
+    
+  }
+  .card-lower{
+    display: flex;
+  }
+  .card-right{
+    
+   
+   width: 30%;
+  
+  }
+  .card-left{
+    
+    width: 70%;
+    overflow: hidden;
+    
+    
+    
+  
+  
+  }
+  .card-title {
+    font-size: 1.25rem;
+    margin-left: 15px;
+    margin-top: 4px;
+    /* margin: 16px 0 8px; */
+  }
+  
+  .card-body {
+    font-size: 1rem;
+    margin-left: 15px;
+    margin-top: 6px;
+    
+  }
+  
+  

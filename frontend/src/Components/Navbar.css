@@ -12,6 +12,8 @@
 
 .navbar-brand a {
     font-size: 24px;
+    font-weight: bolder;
+    font-family: cursive;
     text-decoration: none;
     color: white;
 }
@@ -28,8 +30,10 @@
     transition: color 0.3s ease;
 }
 
+
 .nav-links a:hover {
     color: #ff6347; /* Change color on hover */
+    
 }
 
 /* Mobile menu toggle */
@@ -37,7 +41,7 @@
     display: none;
     font-size: 24px;
     cursor: pointer;
-    z-index: 11; /* Ensure toggle button is above other content */
+    z-index: 1; /* Ensure toggle button is above other content */
 }
 
 /* Responsive styles */
@@ -50,7 +54,7 @@
         background-color: #333;
         flex-direction: column;
         display: none;
-        z-index: 9; /* Ensure links are above other content */
+        z-index: 1; /* Ensure links are above other content */
     }
 
     .nav-links.open {
@@ -68,10 +72,12 @@
     font-size: 18px;
     color: white;
     transition: color 0.3s ease;
+    
 }
 
 .username:hover {
     color: #ff6347;
+    
 }
 
 /* Logout popup styling */

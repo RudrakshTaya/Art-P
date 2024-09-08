@@ -103,9 +103,10 @@ const Home = () => {
 
       <section className="card-section">
         <div className="section-heading">
-          <h2>Featured Cards</h2>
+          <h2>Artistic Highlights</h2>
         </div>
         <div className="card-container">
+        <div className='card-container-items'>
           {randomCards.map((card, index) => (
             <Link to={`/shop/${card._id}`} className="card-link" key={index}>
             <div className="card">
@@ -123,6 +124,8 @@ const Home = () => {
             </div>
           </Link>
           ))}
+          </div>
+          
         </div>
         <div className="view-shop-button">
           <Link to="/Shop" className="shop-button">View All</Link>

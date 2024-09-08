@@ -29,9 +29,10 @@ const Shop = () => {
     <div className="shop">
       <section className="card-section">
         <div className="section-heading">
-          <h2>All Cards</h2>
+          <h2>Showcase of Excellence</h2>
         </div>
         <div className="card-container">
+        <div className='card-container-items'>
           {cards.map((card) => (
             <Link to={`/shop/${card._id}`} className="card-link" key={card._id}>
  {/* Changed key from index to card._id */}
@@ -50,6 +51,7 @@ const Shop = () => {
               </div>
             </Link>
           ))}
+          </div>
         </div>
       </section>
 
