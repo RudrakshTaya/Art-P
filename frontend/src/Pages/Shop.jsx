@@ -4,6 +4,25 @@ import './Shop.css';
 
 const Shop = () => {
   const [cards, setCards] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState([]);
+  const [filteredCards, setFilteredCards] = useState([]); // Store the filtered cards
+const [priceRangeFilter, setPriceRangeFilter] = useState([0, 1000]); // Default price range
+
+
+  const toggleCategory = (category) => {
+    if (categoryFilter.includes(category)) {
+      // Remove the category if it's already selected
+      setCategoryFilter(categoryFilter.filter(c => c !== category));
+    } else {
+      // Add the category to the filter if not selected
+      setCategoryFilter([...categoryFilter, category]);
+    }
+  };
+  
+  const clearCategories = () => {
+    setCategoryFilter([]); // Clears all selected categories
+  };
+  
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -13,6 +32,7 @@ const Shop = () => {
           const data = await response.json();
           console.log(data); // Add this line to debug
           setCards(data);
+          setFilteredCards(data); 
         } else {
           console.error('Failed to fetch cards');
         }
@@ -23,6 +43,20 @@ const Shop = () => {
   
     fetchCards();
   }, []);
+    // Filter cards whenever filters change
+    useEffect(() => {
+      let filtered = cards;
+    
+      // Category filter
+      if (categoryFilter.length > 0) {
+        filtered = filtered.filter(card => categoryFilter.includes(card.category));
+      }
+    
+      // Price range filter
+      filtered = filtered.filter(card => card.price >= priceRangeFilter[0] && card.price <= priceRangeFilter[1]);
+    
+      setFilteredCards(filtered);
+    }, [categoryFilter, priceRangeFilter, cards]);
   
 
   return (
@@ -33,9 +67,58 @@ const Shop = () => {
         </div>
        
         <div className='shop-1'>
-        <div className='filter'><h2>filter</h2></div>
+         {/* Filter Section */}
+         <div className="filter">
+  {/* Category Filter */}
+  <div className="category-filter">
+    <h3>Category</h3>
+    <button
+      className={`category-btn ${categoryFilter.length === 0 ? 'selected' : ''}`}
+      onClick={() => clearCategories()}
+    >
+      All Categories {categoryFilter.length === 0 && '✔'}
+    </button>
+    <button
+      className={`category-btn ${categoryFilter.includes('art') ? 'selected' : ''}`}
+      onClick={() => toggleCategory('art')}
+    >
+      Art {categoryFilter.includes('art') && '✔'}
+    </button>
+    <button
+      className={`category-btn ${categoryFilter.includes('sculpture') ? 'selected' : ''}`}
+      onClick={() => toggleCategory('sculpture')}
+    >
+      Sculpture {categoryFilter.includes('sculpture') && '✔'}
+    </button>
+    <button
+      className={`category-btn ${categoryFilter.includes('photography') ? 'selected' : ''}`}
+      onClick={() => toggleCategory('photography')}
+    >
+      Photography {categoryFilter.includes('photography') && '✔'}
+    </button>
+    
+  </div>
+
+  {/* Price Range Filter */}
+  <div className="price-range-filter">
+    <h3>Price Range</h3>
+    <div className="slider-container">
+      <input
+        type="range"
+        min="0"
+        max="1000"
+        value={priceRangeFilter[1]}
+        onChange={(e) => setPriceRangeFilter([0, parseInt(e.target.value)])}
+      />
+      <span>Price Range: $0 - ${priceRangeFilter[1]}</span>
+    </div>
+  </div>
+</div>
+
+       
+       
         <div className='shop-container'>
-          {cards.map((card) => (
+          {filteredCards.map((card) => (
             <Link to={`/shop/${card._id}`} className="shop-card-link" key={card._id}>
  
               <div className="shop-card">
