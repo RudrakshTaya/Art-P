@@ -1,103 +1,190 @@
 
-.card-section {
-    padding: 20px;
-    background-color: beige;
-  }
+
+
+
+
+
+.shop-section {
+  padding: 20px;
   
-  .section-heading {
-    margin-top: -45px;
-   
-   
-    
-  }
+  background-color: aqua;
   
-  .section-heading h2 {
-    font-size: 2.8rem;
-    margin-left: 12%;
-    font-weight: 300;
-    font-family:'Times New Roman', Times, serif;
-   
-  }
+}
+
+.shop-heading {
+  margin-top: -45px;
+ background-color:black;
+ 
   
-  .card-container {
+}
+
+.shop-heading h2 {
+  font-size: 2.8rem;
+  
+  font-weight: 300;
+  font-family:'Times New Roman', Times, serif;
+ 
+}
+.shop-1{
+    display: flex;
     
-    
-    
-    
-    margin-top: -20px;
+}
+.filter{
+    width: 25%;
     background-color: white;
-  }
-  .card-container-items{
-    display: flex;
-    gap: 70px;
-    justify-content: center;
-    flex-wrap: wrap;
-    
-    
+    margin-top: -2rem;
+}
+.shop-container {
+  background-color: bisque;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 40rem;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  scrollbar-width: none; 
+  margin-top: -2rem;
   
+  width: 75%;
+  
+  
+ 
+ 
+  
+}
+
+.shop-card {
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ 
+  max-width: 250px;
+  max-height: auto;
+  justify-content:space-between ;
+  transition: transform 0.2s;
+  overflow: hidden;
+ 
+}
+.shop-card-link {
+  text-decoration: none; 
+  color: inherit; 
+}
+.shop-card:hover {
+  transform: scale(1.05);
+}
+.shop-card-image-container{
+  max-width: 260px; 
+  height: 200px; 
+  overflow: hidden;
+ padding: 5px;
+  background-color: lightgrey;
+
+}
+.shop-card-image {
+  width: 100%; 
+  height: auto; 
+  object-fit: cover;
+ 
+  
+}
+.shop-card-lower{
+  padding: 10px;
+  background-color: #ddd;
+}
+
+.shop-card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+ 
+  
+}
+
+.shop-card-body {
+  font-size: 1rem;
+ 
+  
+}
+.shop-card-price{
+  font-weight: 500;
+}
+.shop-card-rating{
+  font-weight: 300;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.footer {
+  background: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-links a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+
+
+
+/* Media Query for mobile view */
+@media (max-width: 768px) {
+ 
+  .shop-card {
+    max-width: 150px; /* Decrease card width on smaller screens */
   }
-  .card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .shop-card-image-container {
+    height: 100px; /* Adjust image height */
+  }
+
+  .shop-card-title {
+    font-size: 0.8rem; /* Reduce title font size */
+  }
+
+  .shop-card-body {
+    font-size: 0.675rem; /* Reduce body font size */
+  }
+
+  .shop-card-lower {
+    padding: 4px; /* Adjust padding */
+  }
+  .shop-card-section{
     width: 100%;
-    max-width: 300px;
-    max-height: auto;
-    justify-content:space-between ;
-    transition: transform 0.2s;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    
   }
-  .card-link {
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Inherit color from parent */
-  }
-  .card:hover {
-    transform: scale(1.05);
-  }
-  
-  .card-image {
-    width: 88%;
-    height: 250px;
-    object-fit: cover;
-   margin: 18px 0px 0px 18px;
-   
-    
-  }
-  .card-lower{
-    display: flex;
-  }
-  .card-right{
-    
-   
-   width: 30%;
-  
-  }
-  .card-left{
-    
-    width: 70%;
-    overflow: hidden;
-    
-    
-    
-  
-  
-  }
-  .card-title {
-    font-size: 1.25rem;
-    margin-left: 15px;
-    margin-top: 4px;
-    /* margin: 16px 0 8px; */
-  }
-  
-  .card-body {
-    font-size: 1rem;
-    margin-left: 15px;
-    margin-top: 6px;
-    
-  }
-  
-  
+ 
+ .shop-container{
+    margin-left: 0%;
+    width: 100%;
+ }
+ .filter{
+    display: none;
+ }
+}

@@ -37,9 +37,19 @@
   opacity: 1;
 }
 
+.two{
+  display: flex;
+
+}
+.other{
+  background-color: lightgray;
+  width: 38%;
+}
 .card-section {
   padding: 20px;
-  background-color: beige;
+  
+  width: 60%;
+  
 }
 
 .section-heading {
@@ -51,7 +61,7 @@
 
 .section-heading h2 {
   font-size: 2.8rem;
-  margin-left: 12%;
+  
   font-weight: 300;
   font-family:'Times New Roman', Times, serif;
  
@@ -59,86 +69,82 @@
 
 .card-container {
   
-  
-  
-  
-  margin-top: -20px;
-  background-color: bisque;
-}
-.card-container-items{
   display: flex;
-  gap: 70px;
+  gap: 40px;
   justify-content: center;
   flex-wrap: wrap;
+  height: 40rem;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+  scrollbar-width: none; 
+  margin-top: -2rem;
   
   
-
+  
+ 
+ 
+  
 }
+
 .card {
-  background: #fff;
+  margin-top: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 300px;
+ 
+  max-width: 250px;
   max-height: auto;
   justify-content:space-between ;
   transition: transform 0.2s;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  
+ 
 }
 .card-link {
-  text-decoration: none; /* Remove underline */
-  color: inherit; /* Inherit color from parent */
+  text-decoration: none; 
+  color: inherit; 
 }
 .card:hover {
   transform: scale(1.05);
 }
+.card-image-container{
+  max-width: 260px; /* Set the width of the container */
+  height: 200px; /* Set the height of the container */
+  overflow: hidden;/* Ensures the image doesn't overflow */
+ padding: 5px;
+  background-color: lightgrey;
 
+}
 .card-image {
-  width: 88%;
-  height: 250px;
+  width: 100%; 
+  height: auto; 
   object-fit: cover;
- margin: 18px 0px 0px 18px;
  
   
 }
 .card-lower{
-  display: flex;
+  padding: 10px;
+  background-color: #ddd;
 }
-.card-right{
-  
- 
- width: 30%;
 
-}
-.card-left{
-  
-  width: 70%;
-  overflow: hidden;
-  
-  
-  
-
-
-}
 .card-title {
   font-size: 1.25rem;
-  margin-left: 15px;
-  margin-top: 4px;
-  /* margin: 16px 0 8px; */
+  font-weight: bold;
+ 
+  
 }
 
 .card-body {
   font-size: 1rem;
-  margin-left: 15px;
-  margin-top: 6px;
+ 
   
 }
-
-
+.card-price{
+  font-weight: 500;
+}
+.card-rating{
+  font-weight: 300;
+}
 .view-shop-button {
   text-align: center;
   margin-top: 20px;
@@ -156,6 +162,19 @@
 .shop-button:hover {
   background-color: #0056b3;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .reviews-section {
   padding: 20px;
@@ -233,5 +252,34 @@
 @media (max-width: 480px) {
   .slideshow {
     height: 25vh; /* Further adjust height for smaller screens */
+  }
+}
+/* Media Query for mobile view */
+@media (max-width: 768px) {
+ 
+  .card {
+    max-width: 130px; /* Decrease card width on smaller screens */
+  }
+
+  .card-image-container {
+    height: 80px; /* Adjust image height */
+  }
+
+  .card-title {
+    font-size: 0.8rem; /* Reduce title font size */
+  }
+
+  .card-body {
+    font-size: 0.675rem; /* Reduce body font size */
+  }
+
+  .card-lower {
+    padding: 6px; /* Adjust padding */
+  }
+  .card-section{
+    width: 100%;
+  }
+  .other{
+   display: none;
   }
 }

@@ -100,37 +100,46 @@ const Home = () => {
           ))}
         </div>
       </section>
+<section className='two'>
 
-      <section className="card-section">
+      <div className="card-section">
         <div className="section-heading">
           <h2>Artistic Highlights</h2>
         </div>
         <div className="card-container">
-        <div className='card-container-items'>
+        
           {randomCards.map((card, index) => (
             <Link to={`/shop/${card._id}`} className="card-link" key={index}>
             <div className="card">
+            <div className='card-image-container'>
               <img src={card.imgSrc} alt={card.title} className="card-image" />
+              </div>
               <div className="card-lower">
                 <div className="card-left">
                   <div className="card-title">{card.title}</div>
                   <div className="card-body">{card.text}</div>
                 </div>
                 <div className="card-right">
-                  <div className="card-price">{card.price}</div>
+                  <div className="card-price">$.{card.price}</div>
                   <div className="card-rating">{card.rating} ★</div>
                 </div>
               </div>
             </div>
           </Link>
           ))}
-          </div>
+   
           
         </div>
         <div className="view-shop-button">
           <Link to="/Shop" className="shop-button">View All</Link>
         </div>
+      </div>
+      <div className='other'>
+<h2>hello</h2>
+</div>
       </section>
+     
+
 
       <section className="reviews-section">
         <div className="section-heading">

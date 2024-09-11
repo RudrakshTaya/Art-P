@@ -27,31 +27,36 @@ const Shop = () => {
 
   return (
     <div className="shop">
-      <section className="card-section">
-        <div className="section-heading">
+      <section className="shop-section">
+        <div className="shop-heading">
           <h2>Showcase of Excellence</h2>
         </div>
-        <div className="card-container">
-        <div className='card-container-items'>
+       
+        <div className='shop-1'>
+        <div className='filter'><h2>filter</h2></div>
+        <div className='shop-container'>
           {cards.map((card) => (
-            <Link to={`/shop/${card._id}`} className="card-link" key={card._id}>
- {/* Changed key from index to card._id */}
-              <div className="card">
-                <img src={card.imgSrc} alt={card.title} className="card-image" />
-                <div className='card-lower'>
-                  <div className='card-left'>
-                    <div className="card-title">{card.title}</div>
-                    <div className="card-body">{card.text}</div>
+            <Link to={`/shop/${card._id}`} className="shop-card-link" key={card._id}>
+ 
+              <div className="shop-card">
+              <div className='shop-card-image-container'>
+                <img src={card.imgSrc} alt={card.title} className="shop-card-image" />
+                </div>
+                <div className='shop-card-lower'>
+                  <div className='shop-card-left'>
+                    <div className="shop-card-title">{card.title}</div>
+                    <div className="shop-card-body">{card.text}</div>
                   </div>
-                  <div className='card-right'>
-                    <div className="card-price">{card.price}</div>
-                    <div className="card-rating">{card.rating} ★</div>
+                  <div className='shop-card-right'>
+                    <div className="shop-card-price">{card.price}</div>
+                    <div className="shop-card-rating">{card.rating} ★</div>
                   </div>
                 </div>
               </div>
             </Link>
           ))}
           </div>
+         
         </div>
       </section>
 
