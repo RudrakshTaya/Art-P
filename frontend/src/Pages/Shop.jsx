@@ -79,22 +79,22 @@ const [priceRangeFilter, setPriceRangeFilter] = useState([0, 1000]); // Default 
       All Categories {categoryFilter.length === 0 && '✔'}
     </button>
     <button
-      className={`category-btn ${categoryFilter.includes('art') ? 'selected' : ''}`}
-      onClick={() => toggleCategory('art')}
+      className={`category-btn ${categoryFilter.includes('Art') ? 'selected' : ''}`}
+      onClick={() => toggleCategory('Art')}
     >
-      Art {categoryFilter.includes('art') && '✔'}
+      Art {categoryFilter.includes('Art') && '✔'}
     </button>
     <button
-      className={`category-btn ${categoryFilter.includes('sculpture') ? 'selected' : ''}`}
-      onClick={() => toggleCategory('sculpture')}
+      className={`category-btn ${categoryFilter.includes('Sculpture') ? 'selected' : ''}`}
+      onClick={() => toggleCategory('Sculpture')}
     >
-      Sculpture {categoryFilter.includes('sculpture') && '✔'}
+      Sculpture {categoryFilter.includes('Sculpture') && '✔'}
     </button>
     <button
-      className={`category-btn ${categoryFilter.includes('photography') ? 'selected' : ''}`}
-      onClick={() => toggleCategory('photography')}
+      className={`category-btn ${categoryFilter.includes('Photography') ? 'selected' : ''}`}
+      onClick={() => toggleCategory('Photography')}
     >
-      Photography {categoryFilter.includes('photography') && '✔'}
+      Photography {categoryFilter.includes('Photography') && '✔'}
     </button>
     
   </div>
@@ -131,8 +131,8 @@ const [priceRangeFilter, setPriceRangeFilter] = useState([0, 1000]); // Default 
                     <div className="shop-card-body">{card.text}</div>
                   </div>
                   <div className='shop-card-right'>
-                    <div className="shop-card-price">{card.price}</div>
-                    <div className="shop-card-rating">{card.rating} ★</div>
+                    <div className="shop-card-price">$.{card.price}</div>
+                    <div className="shop-card-rating">{card.ratng} </div>
                   </div>
                 </div>
               </div>

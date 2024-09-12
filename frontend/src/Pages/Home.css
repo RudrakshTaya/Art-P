@@ -130,12 +130,23 @@
 .card-title {
   font-size: 1.25rem;
   font-weight: bold;
+  
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1; 
  
   
 }
 
 .card-body {
-  font-size: 1rem;
+  font-size: 0.8rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2; 
  
   
 }

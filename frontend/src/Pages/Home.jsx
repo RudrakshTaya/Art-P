@@ -121,7 +121,7 @@ const Home = () => {
                 </div>
                 <div className="card-right">
                   <div className="card-price">$.{card.price}</div>
-                  <div className="card-rating">{card.rating} ★</div>
+                  <div className="card-rating">{card.raing} </div>
                 </div>
               </div>
             </div>

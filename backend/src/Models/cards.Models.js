@@ -4,9 +4,10 @@ const cardSchema = new mongoose.Schema({
   title: String,
   text: String,
   imgSrc: String,
-  link: String,
+  
   price: String,
-  rating: Number
+  rating: Number,
+  category:String
 });
 
 const Card = mongoose.model('Card', cardSchema);
