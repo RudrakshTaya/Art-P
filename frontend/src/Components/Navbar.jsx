@@ -30,6 +30,7 @@ const Navbar = () => {
             </div>
             <div className={`nav-links ${isOpen ? 'open' : ''}`}>
                 <Link to="/Shop">Shop</Link>
+                <Link to="/menu">Menu</Link>
                 <Link to="/Challenges">Challenges</Link>
                 <Link to="/Gallery">Gallery</Link>
                 <Link to="/Cart">Cart</Link> {/* Add Cart link */}

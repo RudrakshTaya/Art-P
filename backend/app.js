@@ -6,7 +6,7 @@ const connectDB = require('./src/database/db'); // Assuming you have this for DB
 const cardRoutes = require('./src/Routes/cards.Routes');
 const authRoutes = require('./src/Routes/auth.Routes');
 const cartRoutes = require('./src/Routes/cart.Routes');
-
+const productRoutes = require('./src/Routes/product.Routes');
 const app = express();
 
 // Connect to the database
@@ -20,6 +20,7 @@ app.use(express.json());
 app.use('/cards', cardRoutes);      // Card-related routes
 app.use('/api', authRoutes);        // Authentication routes (signup/signin)
 app.use('/api', cartRoutes);        // Cart-related routes
+app.use('/api', productRoutes);
 
 // Export the app module
 module.exports = app;

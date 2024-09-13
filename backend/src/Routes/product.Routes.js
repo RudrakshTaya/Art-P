@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const productController = require('../Controllers/product.Controllers');
+const { getProductsByType } = require('../Controllers/product.Controllers');
 
-// Get product by ID
-router.get('/product/:productId', productController.getProductById);
-
-// Get all products
-router.get('/products', productController.getAllProducts);
+// Route for fetching products by type
+router.get('/products/:type', getProductsByType);
 
 module.exports = router;
