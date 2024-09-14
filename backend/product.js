@@ -20,7 +20,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 199.99,
         rating: 4.8,
-        imageLink: 'http://example.com/image2.jpg',
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-2',
         attributes: {
             subtype1: 'subtype-B',
@@ -31,7 +31,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 299.99,
         rating: 4.7,
-        imageLink: 'http://example.com/image3.jpg',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-3',
         attributes: {
             subtype1: 'subtype-C',
@@ -42,7 +42,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 149.99,
         rating: 4.6,
-        imageLink: 'http://example.com/image4.jpg',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-2',
         attributes: {
             subtype1: 'subtype-D',
@@ -53,7 +53,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 399.99,
         rating: 4.9,
-        imageLink: 'http://example.com/image5.jpg',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-1',
         attributes: {
             subtype1: 'subtype-E',
@@ -64,7 +64,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 499.99,
         rating: 4.3,
-        imageLink: 'http://example.com/image6.jpg',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-3',
         attributes: {
             subtype1: 'subtype-F',
@@ -75,7 +75,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 250.00,
         rating: 4.5,
-        imageLink: 'http://example.com/image7.jpg',
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-2',
         attributes: {
             subtype1: 'subtype-G',
@@ -86,7 +86,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 189.99,
         rating: 4.2,
-        imageLink: 'http://example.com/image8.jpg',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-1',
         attributes: {
             subtype1: 'subtype-H',
@@ -97,8 +97,8 @@ const allProducts = [
         description: 'This is a sample product',
         price: 120.00,
         rating: 4.7,
-        imageLink: 'http://example.com/image9.jpg',
-        type: 'Type-3',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
         attributes: {
             subtype1: 'subtype-I',
         }
@@ -108,7 +108,7 @@ const allProducts = [
         description: 'This is a sample product',
         price: 90.00,
         rating: 4.1,
-        imageLink: 'http://example.com/image10.jpg',
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
         type: 'Type-1',
         attributes: {
             subtype1: 'subtype-J',

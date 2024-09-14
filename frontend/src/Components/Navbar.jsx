@@ -29,7 +29,6 @@ const Navbar = () => {
                 <Link to="/">Craft Aura</Link>
             </div>
             <div className={`nav-links ${isOpen ? 'open' : ''}`}>
-                <Link to="/Shop">Shop</Link>
                 <Link to="/menu">Menu</Link>
                 <Link to="/Challenges">Challenges</Link>
                 <Link to="/Gallery">Gallery</Link>

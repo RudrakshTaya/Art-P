@@ -33,9 +33,9 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch card data from the backend
-    const fetchCards = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5002/cards'); // Adjust the URL to your API endpoint
+        const response = await fetch('http://localhost:5002/api/products'); // Adjust the URL to your API endpoint
         if (response.ok) {
           const data = await response.json();
           // Function to shuffle array
@@ -49,13 +49,13 @@ const Home = () => {
           };
 
           // Function to select random cards
-          const getRandomCards = (cards, count) => {
-            const shuffledCards = shuffleArray(cards);
+          const getRandomCards = (products, count) => {
+            const shuffledCards = shuffleArray(products);
             return shuffledCards.slice(0, count);
           };
 
           // Get a random selection of cards
-          setRandomCards(getRandomCards(data, 12)); // Change the count to the number of cards you want to display
+          setRandomCards(getRandomCards(data, 4)); // Change the count to the number of cards you want to display
         } else {
           console.error('Failed to fetch cards');
         }
@@ -64,7 +64,7 @@ const Home = () => {
       }
     };
 
-    fetchCards();
+    fetchProducts();
   }, []);
 
   const reviews = [
@@ -108,20 +108,20 @@ const Home = () => {
         </div>
         <div className="card-container">
         
-          {randomCards.map((card, index) => (
-            <Link to={`/shop/${card._id}`} className="card-link" key={index}>
+          {randomCards.map((products, index) => (
+            <Link to={`/products/${products._id}`} className="card-link" key={index}>
             <div className="card">
             <div className='card-image-container'>
-              <img src={card.imgSrc} alt={card.title} className="card-image" />
+              <img src={products.imageLink} alt={products.name} className="card-image" />
               </div>
               <div className="card-lower">
                 <div className="card-left">
-                  <div className="card-title">{card.title}</div>
-                  <div className="card-body">{card.text}</div>
+                  <div className="card-title">{products.name}</div>
+                  <div className="card-body">{products.description}</div>
                 </div>
                 <div className="card-right">
-                  <div className="card-price">$.{card.price}</div>
-                  <div className="card-rating">{card.raing} </div>
+                  <div className="card-price">$.{products.price}</div>
+                  <div className="card-rating">{products.rating} </div>
                 </div>
               </div>
             </div>
@@ -131,7 +131,7 @@ const Home = () => {
           
         </div>
         <div className="view-shop-button">
-          <Link to="/Shop" className="shop-button">View All</Link>
+          <Link to="/menu" className="shop-button">View All</Link>
         </div>
       </div>
       <div className='other'>
