@@ -16,6 +16,414 @@ const allProducts = [
         }
     },
     {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    {
+        name: 'Sample Product 1',
+        description: 'This is a sample product',
+        price: 99.99,
+        rating: 4.5,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-1',
+        attributes: {
+            subtype1: 'subtype-A',
+        }
+    },
+    
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
+        name: 'Sample Product 2',
+        description: 'This is a sample product',
+        price: 199.99,
+        rating: 4.8,
+       imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-B',
+        }
+    },
+    {
+        name: 'Sample Product 3',
+        description: 'This is a sample product',
+        price: 299.99,
+        rating: 4.7,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-3',
+        attributes: {
+            subtype1: 'subtype-C',
+        }
+    },
+    {
+        name: 'Sample Product 4',
+        description: 'This is a sample product',
+        price: 149.99,
+        rating: 4.6,
+        imageLink: 'https://th.bing.com/th/id/OIG2.9O4YqGf98tiYzjKDvg7L',
+        type: 'Type-2',
+        attributes: {
+            subtype1: 'subtype-D',
+        }
+    },
+    {
         name: 'Sample Product 2',
         description: 'This is a sample product',
         price: 199.99,

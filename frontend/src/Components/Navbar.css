@@ -7,7 +7,7 @@
     background-color: #333;
     color: white;
     position: relative; /* Ensure proper stacking context */
-    z-index: 10; /* Ensure navbar is above other content */
+    z-index: 1000; /* Ensure navbar is above other content */
 }
 
 .navbar-brand a {

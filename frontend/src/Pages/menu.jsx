@@ -7,7 +7,7 @@ function MenuPage() {
   const [type1Products, setType1Products] = useState([]);
   const [type2Products, setType2Products] = useState([]);
   const [type3Products, setType3Products] = useState([]);
-  const [miscellaneousProducts, setMiscellaneousProducts] = useState([]);
+  const [miscellaneousProducts] = useState([]);
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
@@ -21,8 +21,8 @@ function MenuPage() {
       const type3Response = await axios.get('http://localhost:5002/api/products/type/Type-3');
       setType3Products(type3Response.data);
 
-      const miscellaneousResponse = await axios.get('http://localhost:5002/api/products/Miscellaneous');
-      setMiscellaneousProducts(miscellaneousResponse.data);
+    // const miscellaneousResponse = await axios.get('http://localhost:5002/api/products/Miscellaneous');
+    //   setMiscellaneousProducts(miscellaneousResponse.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -53,13 +53,13 @@ function MenuPage() {
           {type1Products.length === 0 ? (
             <p>No Type 1 products available.</p>
           ) : (
-            type1Products.slice(0, 2).map(product => (
+            type1Products.slice(0, 4).map(product => (
               <div key={product._id} className='product-card'
               onClick={() => handleProductClick(product._id)} >
                 <img src={product.imageLink} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
-                <p>Description: {product.description}</p>
+                <p> {product.description}</p>
               </div>
             ))
           )}
@@ -76,13 +76,13 @@ function MenuPage() {
           {type2Products.length === 0 ? (
             <p>No Type 2 products available.</p>
           ) : (
-            type2Products.slice(0, 2).map(product => (
+            type2Products.slice(0, 4).map(product => (
               <div key={product._id} className='product-card'
               onClick={() => handleProductClick(product._id)}>
                 <img src={product.imageLink} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
-                <p>Description: {product.description}</p>
+                <p> {product.description}</p>
               </div>
             ))
           )}
@@ -99,13 +99,13 @@ function MenuPage() {
           {type3Products.length === 0 ? (
             <p>No Type 3 products available.</p>
           ) : (
-            type3Products.slice(0, 2).map(product => (
+            type3Products.slice(0, 4).map(product => (
               <div key={product._id} className='product-card'
               onClick={() => handleProductClick(product._id)}>
                 <img src={product.imageLink} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
-                <p>Description: {product.description}</p>
+                <p> {product.description}</p>
               </div>
             ))
           )}
@@ -116,7 +116,7 @@ function MenuPage() {
       <div className='section-4'>
         <div className='section-4-heading'>
           <h2>Section 4 - Miscellaneous Products</h2>
-          <Link to="/miscellaneous-products" className="view-all-button">View All Miscellaneous Products</Link> {/* Navigation button */}
+          <Link to="/#miscellaneous-products" className="view-all-button">View All Miscellaneous Products</Link> {/* Navigation button */}
         </div>
         <div className='section-4-container'>
           {miscellaneousProducts.length === 0 ? (
