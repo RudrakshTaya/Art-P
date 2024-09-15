@@ -52,7 +52,7 @@ function Type1ProductsPage() {
 
 
      
-
+<div className='product-section'>
       {/* Filter Section */}
       <div className="Filter">
        
@@ -105,9 +105,16 @@ function Type1ProductsPage() {
             </div>
           ))
         )}
+        
         </div>
+        
       </div>
+      
+      </div>
+      <div><h2>hello</h2></div>
+     
     </div>
+   
   );
 }
 
