@@ -3,7 +3,7 @@ const User = require('../Models/user.Models'); // Ensure this path matches your 
 
 // Signup Controller
 const signup = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, role = 'user' } = req.body; // Accept role from the request or default to 'user'
 
     try {
         // Check if user already exists
@@ -12,11 +12,12 @@ const signup = async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Create a new user (password will be hashed in the UserSchema pre-save hook)
+        // Create a new user
         user = new User({
             username,
             email,
-            password, // Hashing is handled by the pre-save hook
+            password, // Password hashing is handled by the pre-save hook
+            role, // Save the role
         });
 
         await user.save();
@@ -25,13 +26,15 @@ const signup = async (req, res) => {
             message: 'User registered successfully',
             userId: user._id, // Return userId for later use
             username: user.username,
-            email: user.email
+            email: user.email,
+            role: user.role // Return role to the client
         });
     } catch (error) {
         console.error('Error during signup:', error); // Log the error for debugging
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
 
 // Signin Controller
 const signin = async (req, res) => {
@@ -50,12 +53,13 @@ const signin = async (req, res) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
 
-        // Return user details including userId for session management
+        // Return user details including role
         res.status(200).json({
             message: 'Sign in successful',
             userId: user._id, // Include userId for further use
             username: user.username,
-            email: user.email
+            email: user.email,
+            role: user.role // Return role for client-side role-based redirection
         });
     } catch (error) {
         console.error('Error during signin:', error); // Log the error for debugging

@@ -1,5 +1,6 @@
 // Import the Product model
 const Product = require('../Models/product.Models');
+
 // Get all Products
 const getAllProducts = async (req, res) => {
   try {
@@ -9,6 +10,7 @@ const getAllProducts = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 // Controller function to get products by type
 const getProductsByType = async (req, res) => {
   try {
@@ -32,9 +34,49 @@ const getProductsById = async (req, res) => {
   }
 };
 
+// Controller function to create a new product
+const createProduct = async (req, res) => {
+  const newProduct = new Product(req.body); // Create a new product instance
+  try {
+    const savedProduct = await newProduct.save(); // Save the product to the database
+    res.status(201).json(savedProduct); // Respond with the created product
+  } catch (error) {
+    res.status(400).json({ message: error.message }); // Handle validation errors
+  }
+};
+
+// Controller function to update an existing product
+const updateProduct = async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' }); // If not found, return 404
+    }
+    res.json(updatedProduct); // Respond with the updated product details
+  } catch (error) {
+    res.status(400).json({ message: error.message }); // Handle validation errors
+  }
+};
+
+// Controller function to delete a product
+const deleteProduct = async (req, res) => {
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    if (!deletedProduct) {
+      return res.status(404).json({ message: 'Product not found' }); // If not found, return 404
+    }
+    res.json({ message: 'Product deleted successfully' }); // Respond with success message
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle errors
+  }
+};
+
 // Export the controller functions
 module.exports = {
   getProductsByType,
   getProductsById,
   getAllProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
 };

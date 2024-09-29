@@ -23,17 +23,25 @@ const Signin = () => {
             const data = await response.json();
             if (response.ok) {
                 alert('Sign in successful');
-                // Save the username, email, and user ID in localStorage
-                const userData = { username: data.username, email: data.email, userId: data.userId };
-                signIn(userData);
                 
-                // Save user ID in local storage
-                localStorage.setItem('userId', data.userId);
+                // Save the username, email, userId, and role in localStorage
+                const userData = { 
+                    username: data.username, 
+                    email: data.email, 
+                    userId: data.userId,
+                    role: data.role // Get the user's role
+                };
+                signIn(userData);
 
-                // Redirect to the stored path or default to home
-                const redirectPath = localStorage.getItem('redirectPath') || '/';
-                localStorage.removeItem('redirectPath');
-                navigate(redirectPath); // Redirect to the stored path or default to '/'
+                // Check role and redirect accordingly
+                if (data.role === 'admin') {
+                    navigate('/admin'); // Redirect to the admin panel if the user is an admin
+                } else {
+                    // Redirect to the stored path or default to home
+                    const redirectPath = localStorage.getItem('redirectPath') || '/';
+                    localStorage.removeItem('redirectPath');
+                    navigate(redirectPath); // Redirect to the stored path or default to '/'
+                }
             } else {
                 alert(data.message || 'An error occurred. Please try again.');
             }

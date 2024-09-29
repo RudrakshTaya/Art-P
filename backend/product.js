@@ -13,6 +13,7 @@ const allProducts = [
         type: 'Type-1',
         attributes: {
             subtype1: 'subtype-A',
+            subtype2:'subtype-B',
         }
     },
     {
