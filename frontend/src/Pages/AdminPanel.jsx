@@ -10,7 +10,7 @@ const AdminPanel = () => {
     price: '',
     rating: 0,
     imageLink: '',
-    type: '', // Updated to hold selected type
+    type: '', 
     attributes: {},
   });
   const [isEditing, setIsEditing] = useState(false);

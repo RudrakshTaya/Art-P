@@ -35,8 +35,8 @@ const App = () => {
           <Route path="/shop/:Product_Id" element={<PrivateRoute element={<ProjectDetailPage />} />} />
           <Route path="/cart" element={<PrivateRoute element={<Cart />} />} />
           <Route path="/products/:productId" element={<ProductDetail />} />
-          {/*<Route path="/admin" element={<PrivateRoute element={<AdminPanel />} />} />*/} {/* Admin Panel route */}
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin" element={<PrivateRoute element={<AdminPanel />} />} /> {/* Admin Panel route */}
+          
           <Route path="/confirmation" element={<Confirmation/>} /> {/* Cart route */}
           
 
