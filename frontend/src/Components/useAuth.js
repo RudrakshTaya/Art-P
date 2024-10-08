@@ -9,18 +9,22 @@ export const AuthProvider = ({ children }) => {
     const [role, setRole] = useState(''); // State to hold user role
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-        if (user) {
-            const parsedUser = JSON.parse(user);
-            setIsLoggedIn(true);
-            setUsername(parsedUser.username);
-            setUserId(parsedUser.userId); // Retrieve user ID from local storage
-            setRole(parsedUser.role); // Retrieve user role from local storage
-        } else {
+        try {
+            const user = localStorage.getItem('user');
+            if (user) {
+                const parsedUser = JSON.parse(user);
+                setIsLoggedIn(true);
+                setUsername(parsedUser.username);
+                setUserId(parsedUser.userId); // Retrieve user ID from local storage
+                setRole(parsedUser.role); // Retrieve user role from local storage
+            }
+        } catch (error) {
+            console.error('Error retrieving user from localStorage', error);
+            // If there's an issue parsing the stored user data, reset the state
             setIsLoggedIn(false);
             setUsername('');
-            setUserId(''); // Reset user ID
-            setRole(''); // Reset role
+            setUserId('');
+            setRole('');
         }
     }, []);
 

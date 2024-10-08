@@ -6,11 +6,16 @@ import './Auth.css';
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);  // Loading state
+    const [error, setError] = useState(null);       // Error state
     const navigate = useNavigate();
-    const { signIn } = useAuth(); // Get signIn function
+    const { signIn } = useAuth(); // Get signIn function from context
 
     const handleSignin = async (e) => {
         e.preventDefault();
+        setLoading(true);  // Start loading
+        setError(null);    // Clear any previous errors
+
         try {
             const response = await fetch('http://localhost:5002/api/signin', {
                 method: 'POST',
@@ -21,39 +26,43 @@ const Signin = () => {
             });
 
             const data = await response.json();
+
             if (response.ok) {
-                alert('Sign in successful');
-                
-                // Save the username, email, userId, and role in localStorage
+                // Sign-in successful, store user data and navigate
                 const userData = { 
                     username: data.username, 
                     email: data.email, 
                     userId: data.userId,
-                    role: data.role // Get the user's role
+                    role: data.role
                 };
+                console.log(userData)
                 signIn(userData);
-
-                // Check role and redirect accordingly
+                console.log('User role:', data.role); // In Signin component
+                // Redirect based on user role
                 if (data.role === 'admin') {
-                    navigate('/admin'); // Redirect to the admin panel if the user is an admin
+                    navigate('/admin');  // Admin dashboard
                 } else {
-                    // Redirect to the stored path or default to home
                     const redirectPath = localStorage.getItem('redirectPath') || '/';
                     localStorage.removeItem('redirectPath');
-                    navigate(redirectPath); // Redirect to the stored path or default to '/'
+                    navigate(redirectPath);  // Redirect to stored path or home
                 }
             } else {
-                alert(data.message || 'An error occurred. Please try again.');
+                // Handle error from API
+                setError(data.message || 'Invalid credentials. Please try again.');
             }
         } catch (error) {
-            console.error('Error signing in:', error);
-            alert('An error occurred during sign in. Please try again.');
+            console.error('Sign in error:', error);
+            setError('An error occurred. Please check your connection and try again.');
+        } finally {
+            setLoading(false);  // End loading
         }
+        
     };
 
     return (
         <div className="auth-container">
             <h2>Sign In</h2>
+            
             <form onSubmit={handleSignin}>
                 <input
                     type="email"
@@ -69,8 +78,14 @@ const Signin = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Sign In</button>
+
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Signing In...' : 'Sign In'}
+                </button>
             </form>
+
+            {error && <p className="error-message">{error}</p>} {/* Display error */}
+
             <p>
                 Don't have an account? <Link to="/signup">Sign Up</Link>
             </p>
