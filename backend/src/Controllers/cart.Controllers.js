@@ -1,5 +1,4 @@
 const Cart = require('../Models/cart.Models');
-const Card = require('../Models/cards.Models');
 
 // Add item to cart or update existing item quantity
 exports.addToCart = async (req, res) => {
