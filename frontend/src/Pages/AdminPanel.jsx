@@ -11,14 +11,14 @@ const AdminPanel = () => {
     rating: 0,
     imageLink: '',
     type: '',
-    attributes: {},
+    attributes: {}, // This can be expanded to contain specific attributes
   });
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch all products
+  // Fetch all products for the logged-in admin
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -47,7 +47,7 @@ const AdminPanel = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submit
+  // Handle form submit for adding or updating a product
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -55,12 +55,14 @@ const AdminPanel = () => {
     try {
       const token = localStorage.getItem('token'); // Retrieve the token for the request
       if (isEditing) {
+        // Update an existing product
         await axios.put(`http://localhost:5002/api/admin/products/${currentProductId}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the token
           },
         });
       } else {
+        // Create a new product
         await axios.post('http://localhost:5002/api/admin/products', formData, {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the token
@@ -75,9 +77,8 @@ const AdminPanel = () => {
         rating: 0,
         imageLink: '',
         type: '',
-        attributes: {},
+        attributes: {}, // Reset attributes
       });
-      console.log(formData);
       setIsEditing(false);
       setCurrentProductId(null);
       fetchProducts();
@@ -88,7 +89,7 @@ const AdminPanel = () => {
     }
   };
 
-  // Handle delete
+  // Handle delete request
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this product?');
     if (!confirmDelete) return;
@@ -109,14 +110,22 @@ const AdminPanel = () => {
     }
   };
 
-  // Handle edit
+  // Handle edit product action
   const handleEdit = (product) => {
-    setFormData(product);
+    setFormData({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      rating: product.rating,
+      imageLink: product.imageLink,
+      type: product.type,
+      attributes: product.attributes || {}, // Handle attributes if available
+    });
     setIsEditing(true);
     setCurrentProductId(product._id);
   };
 
-  // Handle cancel edit
+  // Cancel the edit operation
   const handleCancelEdit = () => {
     setFormData({
       name: '',

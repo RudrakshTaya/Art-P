@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product, quantity) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/addcart', {
+        await fetch('http://localhost:5002/api/cart/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/removecart', {
+        await fetch('http://localhost:5002/api/cart/product/remove', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = async (productId, quantity) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/updatecart', {
+        await fetch('http://localhost:5002/api/cart/product/update', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

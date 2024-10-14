@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const connectDB = require('./src/database/db'); // Assuming you have this for DB connection
+const cookieParser = require('cookie-parser');
+
 
 
 // Importing routes
@@ -19,7 +21,7 @@ connectDB();
 app.use(cors());
 app.use(helmet()); // Add basic security headers
 app.use(express.json()); // Parse JSON request bodies
-
+app.use(cookieParser());
 
 
 // Routes

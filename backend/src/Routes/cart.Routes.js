@@ -37,12 +37,12 @@ router.post('/add', addCartValidation, handleValidationErrors, cartController.ad
 router.get('/:userId', param('userId').isMongoId().withMessage('Invalid user ID'), handleValidationErrors, cartController.getCart);
 
 // Buy now
-router.post('/buy', handleValidationErrors, cartController.buyNow);
+router.post('/product/buy', handleValidationErrors, cartController.buyNow);
 
 // Remove from cart
-router.delete('/remove', removeCartValidation, handleValidationErrors, cartController.removeFromCart);
+router.delete('/product/remove', removeCartValidation, handleValidationErrors, cartController.removeFromCart);
 
 // Update quantity of an item in the cart
-router.put('/update', updateCartValidation, handleValidationErrors, cartController.updateQuantity);
+router.put('/product/update', updateCartValidation, handleValidationErrors, cartController.updateQuantity);
 
 module.exports = router;

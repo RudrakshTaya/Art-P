@@ -15,7 +15,8 @@ const getAllProductsForUsers = async (req, res) => {
 // Get all Products for the logged-in admin
 const getAllProductsForAdmin = async (req, res) => {
   try {
-    const adminId = req.user.id; // Assuming req.user contains the authenticated admin's ID
+    const adminId = req.user.userId; // Assuming req.user contains the authenticated admin's ID
+    console.log(adminId);
     const products = await Product.find({ adminId });
     res.status(200).json(products);
   } catch (err) {
@@ -38,7 +39,7 @@ const getProductsByTypeForUsers = async (req, res) => {
 // Get products by type for the logged-in admin
 const getProductsByTypeForAdmin = async (req, res) => {
   try {
-    const adminId = req.user.id;
+    const adminId = req.user.userId;
     const products = await Product.find({ type: req.params.type, adminId });
     res.status(200).json(products);
   } catch (error) {
@@ -76,7 +77,7 @@ const createProduct = [
     try {
       const newProduct = new Product({
         ...req.body,
-        adminId: req.user.id, // Attach admin ID to the product
+        adminId: req.user.userId, // Attach admin ID to the product
       });
       const savedProduct = await newProduct.save();
       res.status(201).json({
@@ -104,7 +105,7 @@ const updateProduct = [
 
     try {
       const updatedProduct = await Product.findOneAndUpdate(
-        { _id: req.params.id, adminId: req.user.id }, // Ensure only the product's admin can update
+        { _id: req.params.id, adminId: req.user.userId }, // Ensure only the product's admin can update
         req.body,
         { new: true, runValidators: true }
       );
@@ -125,7 +126,7 @@ const updateProduct = [
 // Delete a product (only if the product belongs to the logged-in admin)
 const deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id, adminId: req.user.id });
+    const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id, adminId: req.user.userId });
     if (!deletedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }

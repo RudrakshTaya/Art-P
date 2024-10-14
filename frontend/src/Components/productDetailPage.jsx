@@ -38,7 +38,7 @@ function ProductDetail() {
     }
     setProcessing(true); // Start processing
     try {
-      const response = await fetch('http://localhost:5002/api/addcart', {
+      const response = await fetch('http://localhost:5002/api/cart/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function ProductDetail() {
     }
     setProcessing(true); // Start processing
     try {
-      const response = await fetch('http://localhost:5002/api/buy', {
+      const response = await fetch('http://localhost:5002/api/cart/buy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

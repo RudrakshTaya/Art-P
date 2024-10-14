@@ -12,7 +12,7 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5002/api/signup', {
+            const response = await fetch('http://localhost:5002/api/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
