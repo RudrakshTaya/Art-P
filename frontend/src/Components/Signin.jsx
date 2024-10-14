@@ -17,7 +17,7 @@ const Signin = () => {
         setError(null);    // Clear any previous errors
 
         try {
-            const response = await fetch('http://localhost:5002/api/signin', {
+            const response = await fetch('http://localhost:5002/api/auth/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

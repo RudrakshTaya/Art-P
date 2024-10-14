@@ -1,30 +1,27 @@
 const express = require('express');
+const authMiddleware=require('../Middleware/authMiddleware');
 const router = express.Router();
 const {
-    getProductsByType,
-    getProductsById,
-    getAllProducts,
+    getAllProductsForUsers,
+    getProductsByTypeForUsers,
+    getProductById,
+    getAllProductsForAdmin,
+    getProductsByTypeForAdmin,
     createProduct,
     updateProduct,
     deleteProduct,
 } = require('../Controllers/product.Controllers'); // Adjust the path if necessary
 
-// Get all products
-router.get('/products', getAllProducts);
+// User routes
+router.get('/products', getAllProductsForUsers);
+router.get('/products/type/:type', getProductsByTypeForUsers);
+router.get('/products/:id', getProductById);
 
-// Route for fetching products by type
-router.get('/products/type/:type', getProductsByType);
-
-// Get a product by ID
-router.get('/products/:id', getProductsById);
-
-// Create a new product
-router.post('/products', createProduct);
-
-// Update a product by ID
-router.put('/products/:id', updateProduct);
-
-// Delete a product by ID
-router.delete('/products/:id', deleteProduct);
+// Admin routes
+router.get('/admin/products',authMiddleware, getAllProductsForAdmin);
+router.get('/admin/products/type/:type',authMiddleware, getProductsByTypeForAdmin);
+router.post('/admin/products',authMiddleware, createProduct);
+router.put('/admin/products/:id',authMiddleware, updateProduct);
+router.delete('/admin/products/:id',authMiddleware, deleteProduct);
 
 module.exports = router;

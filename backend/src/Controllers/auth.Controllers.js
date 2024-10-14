@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const User = require('../Models/user.Models'); // Ensure this path matches your project structure
 
 // Signup Controller
@@ -16,11 +16,11 @@ const signup = async (req, res) => {
         user = new User({
             username,
             email,
-            password, // Password hashing is handled by the pre-save hook
+            password, // Store the plaintext password, hashing is done in the model
             role, // Save the role
         });
 
-        await user.save();
+        await user.save(); // This will trigger the pre-save hook and hash the password
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -35,7 +35,6 @@ const signup = async (req, res) => {
     }
 };
 
-
 // Signin Controller
 const signin = async (req, res) => {
     const { email, password } = req.body;
@@ -47,19 +46,25 @@ const signin = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Compare the provided password with the stored hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
+        // Use the comparePassword method to validate the password
+        const isMatch = await user.comparePassword(password); // Use the comparePassword method from the User model
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid password' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Return user details including role
+        // Generate a token
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
+            expiresIn: '1h', // Token expiration time
+        });
+
+        // Return user details and token
         res.status(200).json({
             message: 'Sign in successful',
             userId: user._id, // Include userId for further use
             username: user.username,
             email: user.email,
-            role: user.role // Return role for client-side role-based redirection
+            role: user.role, // Return role for client-side role-based redirection
+            token, // Send the token back to the client
         });
     } catch (error) {
         console.error('Error during signin:', error); // Log the error for debugging

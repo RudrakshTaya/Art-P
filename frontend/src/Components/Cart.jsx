@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../Context/cartContext'; // Import CartContext
 import './cart.css';
+
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity } = useCart();
   const [error] = useState(null);
@@ -27,10 +28,12 @@ const CartPage = () => {
     updateQuantity(productId, quantity);
   };
 
+  // Display loading state if cart is undefined
   if (!cart) {
     return <div>Loading cart...</div>;
   }
 
+  // Display error message if an error exists
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -38,26 +41,30 @@ const CartPage = () => {
   return (
     <div className="cart-page">
       <h1>Your Cart</h1>
-      <ul>
-        {cart.map((item) => (
-          <li key={item._id}>
-            <div className="cart-item">
-              <img src={item.productId.imageLink} alt={item.productId.title} />
-              <div className="item-details">
-                <h2>{item.productId.title}</h2>
-                <p>${item.productId.price}</p>
-                <input
-                  type="number"
-                  value={item.quantity}
-                  min="1"
-                  onChange={(e) => handleQuantityChange(item.productId._id, Number(e.target.value))}
-                />
-                <button onClick={() => removeFromCart(item._id)}>Remove</button>
+      {cart.length === 0 ? (
+        <p>Your cart is empty.</p>
+      ) : (
+        <ul>
+          {cart.map((item) => (
+            <li key={item._id}>
+              <div className="cart-item">
+                <img src={item.productId.imageLink} alt={item.productId.title} />
+                <div className="item-details">
+                  <h2>{item.productId.title}</h2>
+                  <p>${item.productId.price.toFixed(2)}</p>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min="1"
+                    onChange={(e) => handleQuantityChange(item.productId._id, Number(e.target.value))}
+                  />
+                  <button onClick={() => removeFromCart(item.productId._id)}>Remove</button>
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="cart-summary">
         <h2>Total Price: ${calculateTotalPrice().toFixed(2)}</h2>
       </div>

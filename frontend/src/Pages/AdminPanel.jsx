@@ -10,16 +10,31 @@ const AdminPanel = () => {
     price: '',
     rating: 0,
     imageLink: '',
-    type: '', 
+    type: '',
     attributes: {},
   });
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Fetch all products
   const fetchProducts = async () => {
-    const response = await axios.get('http://localhost:5002/api/products');
-    setProducts(response.data);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token'); // Retrieve the token from local storage
+      console.log(token);
+      const response = await axios.get('http://localhost:5002/api/admin/products', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the token to the request headers
+        },
+      });
+      setProducts(response.data);
+    } catch (err) {
+      setError('Failed to fetch products. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -35,30 +50,63 @@ const AdminPanel = () => {
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      await axios.put(`http://localhost:5002/api/products/${currentProductId}`, formData);
-    } else {
-      await axios.post('http://localhost:5002/api/products', formData);
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token'); // Retrieve the token for the request
+      if (isEditing) {
+        await axios.put(`http://localhost:5002/api/admin/products/${currentProductId}`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach the token
+          },
+        });
+      } else {
+        await axios.post('http://localhost:5002/api/admin/products', formData, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach the token
+          },
+        });
+      }
+      // Reset form after submission
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        rating: 0,
+        imageLink: '',
+        type: '',
+        attributes: {},
+      });
+      console.log(formData);
+      setIsEditing(false);
+      setCurrentProductId(null);
+      fetchProducts();
+    } catch (err) {
+      setError('Failed to save the product. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    // Reset form
-    setFormData({
-      name: '',
-      description: '',
-      price: '',
-      rating: 0,
-      imageLink: '',
-      type: '', // Reset type
-      attributes: {},
-    });
-    setIsEditing(false);
-    setCurrentProductId(null);
-    fetchProducts();
   };
 
   // Handle delete
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5002/api/products/${id}`);
-    fetchProducts();
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmDelete) return;
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token'); // Retrieve the token for the request
+      await axios.delete(`http://localhost:5002/api/admin/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the token
+        },
+      });
+      fetchProducts();
+    } catch (err) {
+      setError('Failed to delete the product. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle edit
@@ -68,10 +116,31 @@ const AdminPanel = () => {
     setCurrentProductId(product._id);
   };
 
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setFormData({
+      name: '',
+      description: '',
+      price: '',
+      rating: 0,
+      imageLink: '',
+      type: '',
+      attributes: {},
+    });
+    setIsEditing(false);
+    setCurrentProductId(null);
+  };
+
   return (
     <div className="admin-panel">
       <h1>Admin Panel</h1>
+
+      {/* Display error or loading states */}
+      {loading && <p>Loading...</p>}
+      {error && <p className="error-message">{error}</p>}
+
       <form onSubmit={handleSubmit}>
+        <h2>{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
         <input
           name="name"
           value={formData.name}
@@ -122,22 +191,29 @@ const AdminPanel = () => {
           <option value="Type-2">Type 2</option>
           <option value="Type-3">Type 3</option>
         </select>
-        <button type="submit">{isEditing ? 'Update' : 'Add'} Product</button>
+        <button type="submit" disabled={loading}>
+          {isEditing ? 'Update' : 'Add'} Product
+        </button>
+        {isEditing && <button type="button" onClick={handleCancelEdit}>Cancel Edit</button>}
       </form>
 
       <h2>Product List</h2>
       <div className="product-list">
-        <ul>
-          {products.map((product) => (
-            <li key={product._id}>
-              {product.name} - ${product.price}
-              <div>
-                <button onClick={() => handleEdit(product)}>Edit</button>
-                <button onClick={() => handleDelete(product._id)}>Delete</button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {products.length > 0 ? (
+          <ul>
+            {products.map((product) => (
+              <li key={product._id}>
+                {product.name} - ${product.price}
+                <div>
+                  <button onClick={() => handleEdit(product)}>Edit</button>
+                  <button onClick={() => handleDelete(product._id)}>Delete</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No products found.</p>
+        )}
       </div>
     </div>
   );
