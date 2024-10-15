@@ -16,7 +16,7 @@ const getAllProductsForUsers = async (req, res) => {
 const getAllProductsForAdmin = async (req, res) => {
   try {
     const adminId = req.user.userId; // Assuming req.user contains the authenticated admin's ID
-    console.log(adminId);
+   
     const products = await Product.find({ adminId });
     res.status(200).json(products);
   } catch (err) {

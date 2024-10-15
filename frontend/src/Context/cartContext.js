@@ -51,8 +51,8 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/cart/product/remove', {
-          method: 'POST',
+        await fetch('http://localhost:5002/api/cart/remove', {
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -69,8 +69,8 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = async (productId, quantity) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/cart/product/update', {
-          method: 'POST',
+        await fetch('http://localhost:5002/api/cart/update', {
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },

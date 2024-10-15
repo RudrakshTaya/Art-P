@@ -16,8 +16,7 @@ const authMiddleware = (req, res, next) => {
 
     // Attach user information to the request object (e.g., userId, role)
     req.user = decoded;
-    console.log('Authenticated user:', req.user);
-
+   
     // Proceed to the next middleware or route handler
     next();
   } catch (err) {

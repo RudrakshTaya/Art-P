@@ -23,7 +23,7 @@ const AdminPanel = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      console.log(token);
+     
       const response = await axios.get('http://localhost:5002/api/admin/products', {
         headers: {
           Authorization: `Bearer ${token}`, // Attach the token to the request headers

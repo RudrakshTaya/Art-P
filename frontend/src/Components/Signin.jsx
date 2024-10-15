@@ -34,7 +34,7 @@ const Signin = () => {
         const userData = { username, email, userId, role };
 
         signIn(userData);
-        console.log('User role:', role); // Log user role
+        //console.log('User role:', role); // Log user role
 
         // Redirect based on user role
         if (role === 'admin') {
