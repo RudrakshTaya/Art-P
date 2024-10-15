@@ -1,6 +1,7 @@
 const express = require('express');
 const authMiddleware=require('../Middleware/authMiddleware');
 const router = express.Router();
+const upload=require('../Middleware/multerMiddleware');
 const {
     getAllProductsForUsers,
     getProductsByTypeForUsers,
@@ -20,8 +21,8 @@ router.get('/products/:id', getProductById);
 // Admin routes
 router.get('/admin/products',authMiddleware, getAllProductsForAdmin);
 router.get('/admin/products/type/:type',authMiddleware, getProductsByTypeForAdmin);
-router.post('/admin/products',authMiddleware, createProduct);
-router.put('/admin/products/:id',authMiddleware, updateProduct);
+router.post('/admin/products',authMiddleware, upload.single('imageLink'),createProduct);
+router.put('/admin/products/:id',authMiddleware,upload.single('imageLink'), updateProduct);
 router.delete('/admin/products/:id',authMiddleware, deleteProduct);
 
 module.exports = router;

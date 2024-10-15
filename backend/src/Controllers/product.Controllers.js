@@ -1,5 +1,6 @@
 const Product = require('../Models/product.Models');
 const { body, validationResult } = require('express-validator');
+const { uploadOnCloudinary } = require('../utils/cloudinary'); // Make sure this path is correct
 
 // Get all Products for regular users
 const getAllProductsForUsers = async (req, res) => {
@@ -16,7 +17,6 @@ const getAllProductsForUsers = async (req, res) => {
 const getAllProductsForAdmin = async (req, res) => {
   try {
     const adminId = req.user.userId; // Assuming req.user contains the authenticated admin's ID
-   
     const products = await Product.find({ adminId });
     res.status(200).json(products);
   } catch (err) {
@@ -75,18 +75,34 @@ const createProduct = [
     }
 
     try {
+      // Handle image upload to Cloudinary
+      let imageUrl = '';
+      if (req.files && req.files.image && req.files.image.length > 0) {
+        const filePath = req.files.image[0].path; // Get the local file path
+        const response = await uploadOnCloudinary(filePath);
+        if (!response || !response.url) {
+          return res.status(400).json({ message: "Image upload failed" });
+        }
+        imageUrl = response.url; // Get the image URL from Cloudinary response
+      } else {
+        // If no image is uploaded, return an error
+        return res.status(400).json({ message: 'Image upload is required' });
+      }
+
       const newProduct = new Product({
         ...req.body,
+        imageLink: imageUrl, // Save the Cloudinary image URL
         adminId: req.user.userId, // Attach admin ID to the product
       });
+
       const savedProduct = await newProduct.save();
       res.status(201).json({
         message: 'Product created successfully',
         product: savedProduct,
       });
     } catch (error) {
-      console.error(error);
-      res.status(400).json({ message: 'Error creating product', error: error.message });
+      console.error("Error creating product:", error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   },
 ];
@@ -104,9 +120,17 @@ const updateProduct = [
     }
 
     try {
+      // Handle image upload to Cloudinary
+      let imageUrl = '';
+      if (req.files && req.files.image && req.files.image.length > 0) {
+        const filePath = req.files.image[0].path; // Get the local file path
+        const response = await uploadOnCloudinary(filePath);
+        imageUrl = response ? response.url : ''; // Get the image URL from Cloudinary response
+      }
+
       const updatedProduct = await Product.findOneAndUpdate(
         { _id: req.params.id, adminId: req.user.userId }, // Ensure only the product's admin can update
-        req.body,
+        { ...req.body, ...(imageUrl && { imageLink: imageUrl }) }, // Update image link if a new image is uploaded
         { new: true, runValidators: true }
       );
       if (!updatedProduct) {

@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema({
   },
   attributes: {
     type: mongoose.Schema.Types.Mixed, // Dynamic attributes depending on the product type
-    required: true,
+   
   },
   adminId: {
     type: mongoose.Schema.Types.ObjectId,

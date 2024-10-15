@@ -9,7 +9,7 @@ const AdminPanel = () => {
     description: '',
     price: '',
     rating: 0,
-    imageLink: '',
+    imageLink: null, // Store the image file
     type: '',
     attributes: {}, // This can be expanded to contain specific attributes
   });
@@ -23,7 +23,6 @@ const AdminPanel = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-     
       const response = await axios.get('http://localhost:5002/api/admin/products', {
         headers: {
           Authorization: `Bearer ${token}`, // Attach the token to the request headers
@@ -43,8 +42,13 @@ const AdminPanel = () => {
 
   // Handle form input change
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    if (name === 'imageLink') {
+      // Handle image file input
+      setFormData({ ...formData, imageLink: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   // Handle form submit for adding or updating a product
@@ -52,30 +56,44 @@ const AdminPanel = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
     try {
       const token = localStorage.getItem('token'); // Retrieve the token for the request
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('description', formData.description);
+      data.append('price', formData.price);
+      data.append('rating', formData.rating);
+      data.append('type', formData.type);
+      if (formData.imageLink) {
+        data.append('imageLink', formData.imageLink); // Append image file
+      }
+
       if (isEditing) {
         // Update an existing product
-        await axios.put(`http://localhost:5002/api/admin/products/${currentProductId}`, formData, {
+        await axios.put(`http://localhost:5002/api/admin/products/${currentProductId}`, data, {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the token
+            'Content-Type': 'multipart/form-data', // Ensure multipart/form-data is set
           },
         });
       } else {
         // Create a new product
-        await axios.post('http://localhost:5002/api/admin/products', formData, {
+        await axios.post('http://localhost:5002/api/admin/products', data, {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the token
+            'Content-Type': 'multipart/form-data',
           },
         });
       }
+
       // Reset form after submission
       setFormData({
         name: '',
         description: '',
         price: '',
         rating: 0,
-        imageLink: '',
+        imageLink: null, // Reset the image file
         type: '',
         attributes: {}, // Reset attributes
       });
@@ -117,7 +135,7 @@ const AdminPanel = () => {
       description: product.description,
       price: product.price,
       rating: product.rating,
-      imageLink: product.imageLink,
+      imageLink: null, // Reset image on edit
       type: product.type,
       attributes: product.attributes || {}, // Handle attributes if available
     });
@@ -132,7 +150,7 @@ const AdminPanel = () => {
       description: '',
       price: '',
       rating: 0,
-      imageLink: '',
+      imageLink: null,
       type: '',
       attributes: {},
     });
@@ -181,12 +199,18 @@ const AdminPanel = () => {
           type="number"
         />
         <input
-          name="imageLink"
-          value={formData.imageLink}
+          type="file"
+          name="imageLink" // Ensure this matches the state
+          accept="image/*"
           onChange={handleChange}
-          placeholder="Image Link"
-          required
         />
+        {formData.imageLink && (
+          <img 
+            src={URL.createObjectURL(formData.imageLink)} 
+            alt="Preview" 
+            style={{ width: '100px', height: '100px', marginTop: '10px' }} 
+          />
+        )}
         <label htmlFor="type">Type:</label>
         <select
           id="type"
