@@ -1,6 +1,11 @@
 const Product = require('../Models/product.Models');
 const { body, validationResult } = require('express-validator');
-const { uploadOnCloudinary } = require('../utils/cloudinary'); // Make sure this path is correct
+const { uploadOnCloudinary } = require('../utils/cloudinary');
+const multer = require('multer');
+const fs = require('fs');
+
+// Multer configuration for file uploads
+const upload = multer({ dest: 'public/ProductImages/' });
 
 // Get all Products for regular users
 const getAllProductsForUsers = async (req, res) => {
@@ -9,7 +14,7 @@ const getAllProductsForUsers = async (req, res) => {
     res.status(200).json(products);
   } catch (err) {
     console.error(err); // Log the error for debugging
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error while fetching products' });
   }
 };
 
@@ -21,7 +26,7 @@ const getAllProductsForAdmin = async (req, res) => {
     res.status(200).json(products);
   } catch (err) {
     console.error(err); // Log the error for debugging
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error while fetching products for admin' });
   }
 };
 
@@ -32,7 +37,7 @@ const getProductsByTypeForUsers = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error while fetching products by type' });
   }
 };
 
@@ -44,7 +49,7 @@ const getProductsByTypeForAdmin = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error while fetching products by type for admin' });
   }
 };
 
@@ -58,7 +63,7 @@ const getProductById = async (req, res) => {
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error while fetching product by ID' });
   }
 };
 
@@ -76,23 +81,30 @@ const createProduct = [
 
     try {
       // Handle image upload to Cloudinary
-      let imageUrl = '';
-      if (req.files && req.files.image && req.files.image.length > 0) {
-        const filePath = req.files.image[0].path; // Get the local file path
+      let imageUrl;
+      if (req.files && req.files.length > 0) {
+        const filePath = req.files[0].path; // Get the local file path
+       
+
+        // Check if the file exists at the given path
+        if (!fs.existsSync(filePath)) {
+          return res.status(400).json({ message: 'Uploaded file does not exist at the given path' });
+        }
+
         const response = await uploadOnCloudinary(filePath);
         if (!response || !response.url) {
-          return res.status(400).json({ message: "Image upload failed" });
+          console.error("Cloudinary upload response:", response);
+          return res.status(400).json({ message: 'Image upload failed' });
         }
         imageUrl = response.url; // Get the image URL from Cloudinary response
       } else {
-        // If no image is uploaded, return an error
         return res.status(400).json({ message: 'Image upload is required' });
       }
 
       const newProduct = new Product({
         ...req.body,
-        imageLink: imageUrl, // Save the Cloudinary image URL
-        adminId: req.user.userId, // Attach admin ID to the product
+        imageLink: imageUrl,
+        adminId: req.user.userId,
       });
 
       const savedProduct = await newProduct.save();
@@ -101,8 +113,8 @@ const createProduct = [
         product: savedProduct,
       });
     } catch (error) {
-      console.error("Error creating product:", error);
-      res.status(500).json({ message: 'Internal server error' });
+      console.error('Error creating product:', error);
+      res.status(500).json({ message: 'Internal server error while creating product' });
     }
   },
 ];
@@ -121,11 +133,13 @@ const updateProduct = [
 
     try {
       // Handle image upload to Cloudinary
-      let imageUrl = '';
-      if (req.files && req.files.image && req.files.image.length > 0) {
-        const filePath = req.files.image[0].path; // Get the local file path
+      let imageUrl;
+      if (req.files && req.files.length > 0) {
+        const filePath = req.files[0].path; // Get the local file path
         const response = await uploadOnCloudinary(filePath);
-        imageUrl = response ? response.url : ''; // Get the image URL from Cloudinary response
+        if (response && response.url) {
+          imageUrl = response.url; // Get the image URL from Cloudinary response
+        }
       }
 
       const updatedProduct = await Product.findOneAndUpdate(
@@ -141,8 +155,8 @@ const updateProduct = [
         product: updatedProduct,
       });
     } catch (error) {
-      console.error(error);
-      res.status(400).json({ message: 'Error updating product', error: error.message });
+      console.error('Error updating product:', error);
+      res.status(500).json({ message: 'Internal server error while updating product' });
     }
   },
 ];
@@ -156,8 +170,8 @@ const deleteProduct = async (req, res) => {
     }
     res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error deleting product:', error);
+    res.status(500).json({ message: 'Internal server error while deleting product' });
   }
 };
 

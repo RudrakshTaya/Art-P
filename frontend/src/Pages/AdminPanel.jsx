@@ -72,7 +72,9 @@ const AdminPanel = () => {
       if (isEditing) {
         // Update an existing product
         await axios.put(`http://localhost:5002/api/admin/products/${currentProductId}`, data, {
+          timeout:60000,
           headers: {
+           
             Authorization: `Bearer ${token}`, // Attach the token
             'Content-Type': 'multipart/form-data', // Ensure multipart/form-data is set
           },
@@ -80,6 +82,7 @@ const AdminPanel = () => {
       } else {
         // Create a new product
         await axios.post('http://localhost:5002/api/admin/products', data, {
+          timeout:60000,
           headers: {
             Authorization: `Bearer ${token}`, // Attach the token
             'Content-Type': 'multipart/form-data',
@@ -189,14 +192,17 @@ const AdminPanel = () => {
           placeholder="Price"
           required
           type="number"
+          min="0" // Ensure price is non-negative
         />
         <input
           name="rating"
           value={formData.rating}
           onChange={handleChange}
-          placeholder="Rating"
+          placeholder="Rating (1-5)"
           required
           type="number"
+          min="1" // Set minimum rating
+          max="5" // Set maximum rating
         />
         <input
           type="file"
