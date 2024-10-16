@@ -3,7 +3,7 @@ const User = require('../Models/user.Models'); // Ensure this path matches your 
 
 // Signup Controller
 const signup = async (req, res) => {
-    const { username, email, password, role = 'user' } = req.body; // Accept role from the request or default to 'user'
+    const { username, email, password, role } = req.body; // Accept role from the request
 
     try {
         // Check if user already exists
@@ -17,7 +17,7 @@ const signup = async (req, res) => {
             username,
             email,
             password, // Store the plaintext password, hashing is done in the model
-            role, // Save the role
+            role: role || 'user', // Use provided role or default to 'user'
         });
 
         await user.save(); // This will trigger the pre-save hook and hash the password
@@ -72,4 +72,75 @@ const signin = async (req, res) => {
     }
 };
 
-module.exports = { signup, signin };
+// Admin Signup Controller
+const adminSignup = async (req, res) => {
+    const { username, email, password } = req.body; // Role will be set as 'admin' by default
+
+    try {
+        // Check if admin already exists
+        let admin = await User.findOne({ email });
+        if (admin) {
+            return res.status(400).json({ message: 'Admin already exists' });
+        }
+
+        // Create a new admin
+        admin = new User({
+            username,
+            email,
+            password, // Store the plaintext password, hashing is done in the model
+            role: 'admin', // Explicitly set role to 'admin'
+        });
+
+        await admin.save(); // This will trigger the pre-save hook and hash the password
+
+        res.status(201).json({
+            message: 'Admin registered successfully',
+            userId: admin._id, // Return userId for later use
+            username: admin.username,
+            email: admin.email,
+            role: admin.role // Return role to the client
+        });
+    } catch (error) {
+        console.error('Error during admin signup:', error); // Log the error for debugging
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Admin Signin Controller
+const adminSignin = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Find the admin by email
+        const admin = await User.findOne({ email });
+        if (!admin || admin.role !== 'admin') {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Use the comparePassword method to validate the password
+        const isMatch = await admin.comparePassword(password); // Use the comparePassword method from the User model
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate a token
+        const token = jwt.sign({ userId: admin._id, role: admin.role }, process.env.JWT_SECRET, {
+            expiresIn: '1h', // Token expiration time
+        });
+
+        // Return admin details and token
+        res.status(200).json({
+            message: 'Admin sign in successful',
+            userId: admin._id, // Include userId for further use
+            username: admin.username,
+            email: admin.email,
+            role: admin.role, // Return role for client-side role-based redirection
+            token, // Send the token back to the client
+        });
+    } catch (error) {
+        console.error('Error during admin signin:', error); // Log the error for debugging
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+module.exports = { signup, signin, adminSignup, adminSignin };
