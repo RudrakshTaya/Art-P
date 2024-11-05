@@ -33,7 +33,7 @@ const Navbar = () => {
                 <Link to="/Challenges">Challenges</Link>
                 <Link to="/Gallery">Gallery</Link>
                 <Link to="/Cart">Cart</Link> {/* Add Cart link */}
-                <Link to="/admin">Dashboard</Link>
+                
                 {!isLoggedIn ? (
                     <Link to="/Signin" onClick={handleSignInClick}>Sign In</Link>
                 ) : (

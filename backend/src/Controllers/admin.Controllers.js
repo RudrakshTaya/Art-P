@@ -1,5 +1,5 @@
 const Product = require('../Models/product.Models');
-const Order = require('../Models/order.Models'); // Ensure you require the Order model
+const Order = require('../Models/order.Models');
 const { body, validationResult } = require('express-validator');
 const { uploadOnCloudinary } = require('../utils/cloudinary');
 const multer = require('multer');
@@ -8,37 +8,15 @@ const fs = require('fs');
 // Multer configuration for file uploads
 const upload = multer({ dest: 'public/ProductImages/' });
 
-// Get all Products for regular users
-const getAllProductsForUsers = async (req, res) => {
-  try {
-    const products = await Product.find(); // Fetch all products
-    res.status(200).json(products);
-  } catch (err) {
-    console.error(err); // Log the error for debugging
-    res.status(500).json({ message: 'Internal server error while fetching products' });
-  }
-};
-
-// Get all Products for the logged-in admin
+// Get all products for the logged-in admin
 const getAllProductsForAdmin = async (req, res) => {
   try {
     const adminId = req.user.userId; // Assuming req.user contains the authenticated admin's ID
     const products = await Product.find({ adminId });
     res.status(200).json(products);
   } catch (err) {
-    console.error(err); // Log the error for debugging
+    console.error(err);
     res.status(500).json({ message: 'Internal server error while fetching products for admin' });
-  }
-};
-
-// Get products by type for regular users
-const getProductsByTypeForUsers = async (req, res) => {
-  try {
-    const products = await Product.find({ type: req.params.type }); // Fetch products by type for all users
-    res.status(200).json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error while fetching products by type' });
   }
 };
 
@@ -51,20 +29,6 @@ const getProductsByTypeForAdmin = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error while fetching products by type for admin' });
-  }
-};
-
-// Get a product by ID (for all users)
-const getProductById = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id); // Fetch product by ID for all users
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error while fetching product by ID' });
   }
 };
 
@@ -147,9 +111,11 @@ const updateProduct = [
         { ...req.body, ...(imageUrl && { imageLink: imageUrl }) }, // Update image link if a new image is uploaded
         { new: true, runValidators: true }
       );
+
       if (!updatedProduct) {
         return res.status(404).json({ message: 'Product not found' });
       }
+
       res.status(200).json({
         message: 'Product updated successfully',
         product: updatedProduct,
@@ -175,58 +141,63 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const placeOrder = [
-  body('productId').isMongoId().withMessage('A valid product ID is required'),
-  body('quantity').isInt({ gt: 0 }).withMessage('Quantity must be a positive integer'),
+// Function to get recent orders for a specific admin
+const getRecentOrders = async (req, res) => {
+  try {
+    const adminId = req.user.userId; // Get the admin's ID from the authenticated user
+    const orders = await Order.find({
+      'products.adminId': adminId, // Filter orders that contain products from this admin
+    })
+      .sort({ createdAt: -1 }) // Sort by creation date descending
+      .limit(10) // Limit to the 10 most recent orders
+      .populate('products.productId'); // Populate product details if necessary
 
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error fetching recent orders for admin:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
-    try {
-      const { productId, quantity ,userId} = req.body;
+// Function to get total earnings for a specific admin
+const getTotalEarnings = async (req, res) => {
+  try {
+    const adminId = req.user.userId; // Get the admin's ID from the authenticated user
+    console.log('Admin ID:', adminId); // Log the adminId
+   
+    const totalEarnings = await Order.aggregate([
+      {
+        $unwind: '$products', // Deconstruct the products array
+      },
+      {
+        $match: {
+          'products.adminId': adminId, // Only include orders with products from this admin
+        },
+      },
+      {
+        $group: {
+          _id: null, // Group all documents
+          totalEarnings: { $sum: { $multiply: ['$products.price', '$products.quantity'] } }, // Sum total earnings based on price and quantity
+        },
+      },
+    ]);
+    
+    console.log('Total Earnings Calculation:', totalEarnings); // Log the result for debugging
+    
+    res.status(200).json({ totalEarnings: totalEarnings[0] ? totalEarnings[0].totalEarnings : 0 });
+  } catch (error) {
+    console.error('Error fetching total earnings for admin:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
-      // Check if the product exists
-      const product = await Product.findById(productId);
-      if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
-      }
-
-      // Create a new order
-      const newOrder = new Order({
-        userId: userId, // Get userId from authenticated user
-        products: [{
-          productId: product._id,
-          quantity,
-          price: product.price, // Use product price
-          adminId: product.adminId, // Associate order with the product's admin
-        }],
-        total: product.price * quantity, // Calculate total price
-      });
-
-      const savedOrder = await newOrder.save();
-      res.status(201).json({
-        message: 'Order placed successfully',
-        order: savedOrder,
-      });
-    } catch (error) {
-      console.error('Error placing order:', error);
-      res.status(500).json({ message: 'Internal server error while placing order' });
-    }
-  },
-];
-
-
+// Exporting all functions
 module.exports = {
-  getProductsByTypeForUsers,
-  getProductById,
-  getAllProductsForUsers,
   getProductsByTypeForAdmin,
   getAllProductsForAdmin,
   createProduct,
   updateProduct,
   deleteProduct,
-  placeOrder, // Export the placeOrder function
+  getRecentOrders,
+  getTotalEarnings,
 };

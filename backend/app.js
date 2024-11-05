@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./src/Routes/auth.Routes');
 const cartRoutes = require('./src/Routes/cart.Routes');
 const productRoutes = require('./src/Routes/product.Routes');
+const adminRoutes=require('./src/Routes/admin.Routes')
 
 // Initialize Express app
 const app = express();
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);        // Authentication routes (signup/signin)
 app.use('/api/cart', cartRoutes);        // Cart-related routes
 app.use('/api', productRoutes); // Product-related routes
+app.use('/api/ad', adminRoutes);
 
 // Error-handling middleware
 app.use((err, req, res, next) => {

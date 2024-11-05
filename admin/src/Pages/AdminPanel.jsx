@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Adminpanel.css'; // Import the CSS file
 
-const AdminPanel = () => {
+const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [earnings, setEarnings] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     price: '',
     rating: 0,
-    imageLink: null, // Store the image file
+    imageLink: null,
     type: '',
-    attributes: {}, // This can be expanded to contain specific attributes
   });
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
@@ -21,12 +22,11 @@ const AdminPanel = () => {
   // Fetch all products for the logged-in admin
   const fetchProducts = async () => {
     setLoading(true);
+    setError(null);
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const response = await axios.get('http://localhost:5002/api/admin/products', {
-        headers: {
-          Authorization: `Bearer ${token}`, // Attach the token to the request headers
-        },
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5002/api/ad/admin/products', {
+        headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);
     } catch (err) {
@@ -36,15 +36,50 @@ const AdminPanel = () => {
     }
   };
 
+  // Fetch recent orders
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5002/api/ad/admin/orders', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOrders(response.data);
+    } catch (err) {
+      setError('Failed to fetch orders. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch total earnings
+  const fetchEarnings = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5002/api/ad/admin/earnings', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEarnings(Number(response.data.totalEarnings) || 0); // Ensure earnings are a number
+    } catch (err) {
+      setError('Failed to fetch earnings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchOrders();
+    fetchEarnings();
   }, []);
 
   // Handle form input change
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'imageLink') {
-      // Handle image file input
       setFormData({ ...formData, imageLink: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -56,9 +91,8 @@ const AdminPanel = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token for the request
+      const token = localStorage.getItem('token');
       const data = new FormData();
       data.append('name', formData.name);
       data.append('description', formData.description);
@@ -66,42 +100,25 @@ const AdminPanel = () => {
       data.append('rating', formData.rating);
       data.append('type', formData.type);
       if (formData.imageLink) {
-        data.append('imageLink', formData.imageLink); // Append image file
+        data.append('imageLink', formData.imageLink);
       }
 
       if (isEditing) {
-        // Update an existing product
-        await axios.put(`http://localhost:5002/api/admin/products/${currentProductId}`, data, {
-          timeout:60000,
+        await axios.put(`http://localhost:5002/api/ad/admin/products/${currentProductId}`, data, {
           headers: {
-           
-            Authorization: `Bearer ${token}`, // Attach the token
-            'Content-Type': 'multipart/form-data', // Ensure multipart/form-data is set
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
           },
         });
       } else {
-        // Create a new product
-        await axios.post('http://localhost:5002/api/admin/products', data, {
-          timeout:60000,
+        await axios.post('http://localhost:5002/api/ad/admin/products', data, {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach the token
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         });
       }
-
-      // Reset form after submission
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        rating: 0,
-        imageLink: null, // Reset the image file
-        type: '',
-        attributes: {}, // Reset attributes
-      });
-      setIsEditing(false);
-      setCurrentProductId(null);
+      resetForm();
       fetchProducts();
     } catch (err) {
       setError('Failed to save the product. Please try again.');
@@ -116,12 +133,11 @@ const AdminPanel = () => {
     if (!confirmDelete) return;
 
     setLoading(true);
+    setError(null);
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token for the request
-      await axios.delete(`http://localhost:5002/api/admin/products/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Attach the token
-        },
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5002/api/ad/admin/products/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       fetchProducts();
     } catch (err) {
@@ -138,9 +154,8 @@ const AdminPanel = () => {
       description: product.description,
       price: product.price,
       rating: product.rating,
-      imageLink: null, // Reset image on edit
+      imageLink: null,
       type: product.type,
-      attributes: product.attributes || {}, // Handle attributes if available
     });
     setIsEditing(true);
     setCurrentProductId(product._id);
@@ -148,6 +163,13 @@ const AdminPanel = () => {
 
   // Cancel the edit operation
   const handleCancelEdit = () => {
+    resetForm();
+    setIsEditing(false);
+    setCurrentProductId(null);
+  };
+
+  // Reset form to initial state
+  const resetForm = () => {
     setFormData({
       name: '',
       description: '',
@@ -155,44 +177,44 @@ const AdminPanel = () => {
       rating: 0,
       imageLink: null,
       type: '',
-      attributes: {},
     });
     setIsEditing(false);
     setCurrentProductId(null);
   };
 
   return (
-    <div className="admin-panel">
-      <h1>Admin Panel</h1>
+    <div className="admin-dashboard">
+     
 
       {/* Display error or loading states */}
-      {loading && <p>Loading...</p>}
+      {loading && <p className="loading-message">Loading...</p>}
       {error && <p className="error-message">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
+      {/* Add/Edit Product Form */}
+      <form onSubmit={handleSubmit} className="product-form">
         <h2>{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
         <input
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Name"
+          placeholder="Product Name"
           required
         />
         <input
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="Description"
+          placeholder="Product Description"
           required
         />
         <input
           name="price"
           value={formData.price}
           onChange={handleChange}
-          placeholder="Price"
+          placeholder="Price ($)"
           required
           type="number"
-          min="0" // Ensure price is non-negative
+          min="0"
         />
         <input
           name="rating"
@@ -201,12 +223,12 @@ const AdminPanel = () => {
           placeholder="Rating (1-5)"
           required
           type="number"
-          min="1" // Set minimum rating
-          max="5" // Set maximum rating
+          min="1"
+          max="5"
         />
         <input
           type="file"
-          name="imageLink" // Ensure this matches the state
+          name="imageLink"
           accept="image/*"
           onChange={handleChange}
         />
@@ -214,10 +236,10 @@ const AdminPanel = () => {
           <img 
             src={URL.createObjectURL(formData.imageLink)} 
             alt="Preview" 
-            style={{ width: '100px', height: '100px', marginTop: '10px' }} 
+            className="image-preview" 
           />
         )}
-        <label htmlFor="type">Type:</label>
+        <label htmlFor="type">Product Type:</label>
         <select
           id="type"
           name="type"
@@ -230,32 +252,57 @@ const AdminPanel = () => {
           <option value="Type-2">Type 2</option>
           <option value="Type-3">Type 3</option>
         </select>
-        <button type="submit" disabled={loading}>
-          {isEditing ? 'Update' : 'Add'} Product
+        <button type="submit" disabled={loading} className="submit-button">
+          {isEditing ? 'Update Product' : 'Add Product'}
         </button>
-        {isEditing && <button type="button" onClick={handleCancelEdit}>Cancel Edit</button>}
+        {isEditing && <button type="button" onClick={handleCancelEdit} className="cancel-button">Cancel Edit</button>}
       </form>
 
-      <h2>Product List</h2>
-      <div className="product-list">
+      {/* Statistics Section */}
+      <section className="statistics">
+        <h2>Statistics</h2>
+        <p>Total Earnings: <strong>${typeof earnings === 'number' ? earnings.toFixed(2) : 'N/A'}</strong></p>
+      </section>
+
+      {/* Recent Orders Section */}
+      <section className="recent-orders">
+        <h2>Recent Orders</h2>
+        {orders.length > 0 ? (
+          <ul>
+            {orders.map((order) => (
+              <li key={order._id} className="order-item">
+                Order ID: {order._id} - Total: <strong>${order.total.toFixed(2)}</strong> - Status: {order.status}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No recent orders found.</p>
+        )}
+      </section>
+
+      {/* Product List Section */}
+      <section className="product-list">
+        <h2>Product List</h2>
         {products.length > 0 ? (
           <ul>
             {products.map((product) => (
-              <li key={product._id}>
-                {product.name} - ${product.price}
-                <div>
-                  <button onClick={() => handleEdit(product)}>Edit</button>
-                  <button onClick={() => handleDelete(product._id)}>Delete</button>
-                </div>
+              <li key={product._id} className="product-item">
+                <h3>{product.name}</h3>
+                
+                <p>Price: <strong>${product.price.toFixed(2)}</strong></p>
+                
+                <p>Type: <strong>{product.type}</strong></p>
+                <button onClick={() => handleEdit(product)} className="edit-button">Edit</button>
+                <button onClick={() => handleDelete(product._id)} className="delete-button">Delete</button>
               </li>
             ))}
           </ul>
         ) : (
           <p>No products found.</p>
         )}
-      </div>
+      </section>
     </div>
   );
 };
 
-export default AdminPanel;
+export default AdminDashboard;

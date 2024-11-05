@@ -19,8 +19,9 @@ const Signup = () => {
                 },
                 body: JSON.stringify({ username, email, password, role }), // Send role as well
             });
-
+              
             const data = await response.json();
+            console.log(data);
             if (response.ok) {
                 alert('User registered successfully');
                 // Optionally redirect to the sign-in page
