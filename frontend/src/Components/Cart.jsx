@@ -48,9 +48,10 @@ const CartPage = () => {
           {cart.map((item) => (
             <li key={item._id}>
               <div className="cart-item">
-                <img src={item.productId.imageLink} alt={item.productId.title} />
+              
+                <img src={item.productId.images[0].url} alt={item.productId.name} />
                 <div className="item-details">
-                  <h2>{item.productId.title}</h2>
+                  <h2>{item.productId.name}</h2>
                   <p>${item.productId.price.toFixed(2)}</p>
                   <input
                     type="number"

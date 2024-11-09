@@ -112,10 +112,23 @@ function ProductDetail() {
 
   return (
     <div className="product-detail">
-      <h1>{product.name}</h1>
-      <img src={product.imageLink} alt={product.name} />
-      <p>Price: ${product.price}</p>
-      <p>{product.description}</p>
+    <h1>{product.name}</h1>
+
+    {/* Render each image in the images array */}
+    <div className="product-images">
+      {product.images && product.images.length > 0 ? (
+       
+        product.images.map((image, index) => (
+          
+          <img key={index} src={image.url} alt={`${product.name} ${index + 1}`} />
+        ))
+      ) : (
+        <p>No images available</p>
+      )}
+    </div>
+    
+    <p>Price: ${product.price}</p>
+    <p>{product.description}</p>
 
       <div className="quantity-selector">
         <label>Quantity: </label>

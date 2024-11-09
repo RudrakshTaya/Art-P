@@ -15,7 +15,9 @@ function Type1ProductsPage() {
       .get('http://localhost:5002/api/products/type/Type-1')
       .then((response) => {
         setProducts(response.data);
+        console.log(response.data)
       })
+      
       .catch((error) => {
         console.error('Error fetching Type1 products:', error);
       });
@@ -95,8 +97,8 @@ function Type1ProductsPage() {
               onClick={() => handleProductClick(product._id)} // Add onClick event
             >
               <img
-                src={product.imageLink}
-                alt="Product"
+                src={product.images[0]?.url}
+                alt={product.images[0]?.altText || 'Product image'}
                 className="shop-card-image"
               />
               <h3>{product.name}</h3>
@@ -111,7 +113,7 @@ function Type1ProductsPage() {
       </div>
       
       </div>
-      <div><h2>hello</h2></div>
+
      
     </div>
    

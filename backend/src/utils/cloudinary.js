@@ -8,12 +8,14 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET || 'htlUD916K5u82m5tHNpICrrLzmY',
 });
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Function to upload a file to Cloudinary
-const uploadOnCloudinary = async (localFilePath, retries = 3) => {
+const uploadOnCloudinary = async (localFilePath, retries = 10) => {
     try {
         if (!localFilePath) {
             console.error("No file path provided.");
-            return null; // If no file path is provided, return null
+            return null;
         }
 
         // Check if the file exists
@@ -21,36 +23,38 @@ const uploadOnCloudinary = async (localFilePath, retries = 3) => {
             await fs.access(localFilePath);
         } catch (err) {
             console.error("Local file does not exist:", localFilePath);
-            return null; // Return null if the file doesn't exist
+            return null;
         }
 
         // Upload file to Cloudinary
         const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto", // Automatically detect file type (image, video, etc.)
-            timeout: 120000, 
+            resource_type: "auto",
+            timeout: 6000000, 
         });
 
-        // Check if the URL exists in the response
         if (response && response.secure_url) {
-            // Delete the local file after successful upload
             await fs.unlink(localFilePath);
-           
-            // Return relevant data from the response
             return {
-                url: response.secure_url, // Return the URL of the uploaded image
-                public_id: response.public_id, // Return the public ID for further operations
-                ...response // Include other response data if needed
+                url: response.secure_url,
+                public_id: response.public_id,
+                ...response 
             };
         } else {
             console.error("Failed to upload the file. No secure URL returned.");
-            throw new Error("No secure URL returned."); // Throw error to trigger retry
+            throw new Error("No secure URL returned.");
         }
     } catch (error) {
         console.error("Error uploading to Cloudinary:", error.message || error);
 
+        // Check for specific ENOTFOUND error
+        if (error.code === 'ENOTFOUND' && retries > 0) {
+            console.log("Network error detected. Retrying...");
+        }
+
         // Retry logic if retries are available
         if (retries > 0) {
             console.log(`Retrying upload... Attempts left: ${retries}`);
+            await sleep(3000); // Delay before retry
             return await uploadOnCloudinary(localFilePath, retries - 1);
         } else {
             // If all retries are exhausted, delete the local file
@@ -62,7 +66,7 @@ const uploadOnCloudinary = async (localFilePath, retries = 3) => {
             }
         }
 
-        return null; // Return null if retries exhausted
+        return null;
     }
 };
 

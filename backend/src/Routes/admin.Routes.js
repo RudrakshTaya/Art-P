@@ -19,8 +19,8 @@ router.get('/admin/products', authMiddleware, getAllProductsForAdmin);
 router.get('/admin/products/type/:type', authMiddleware, getProductsByTypeForAdmin);
 
 // Using upload.array for multiple image uploads
-router.post('/admin/products', authMiddleware, upload.array('imageLink'), createProduct);
-router.put('/admin/products/:id', authMiddleware, upload.array('imageLink'), updateProduct);
+router.post('/admin/products', authMiddleware, upload.array('images',10), createProduct);
+router.put('/admin/products/:id', authMiddleware, upload.array('images',10), updateProduct);
 router.delete('/admin/products/:id', authMiddleware, deleteProduct);
 
 // Route to get recent orders

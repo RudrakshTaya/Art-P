@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Adminpanel.css'; // Import the CSS file
+import './Adminpanel.css';
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -10,19 +10,21 @@ const AdminDashboard = () => {
     name: '',
     description: '',
     price: '',
-    rating: 0,
-    imageLink: null,
-    type: '',
+    category: '',
+    brand: '',
+    stock: '',
+    images: [],
+    discount: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
-  // Fetch all products for the logged-in admin
+  // Fetch products
   const fetchProducts = async () => {
     setLoading(true);
-    setError(null);
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5002/api/ad/admin/products', {
@@ -36,10 +38,9 @@ const AdminDashboard = () => {
     }
   };
 
-  // Fetch recent orders
+  // Fetch orders
   const fetchOrders = async () => {
     setLoading(true);
-    setError(null);
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5002/api/ad/admin/orders', {
@@ -53,16 +54,15 @@ const AdminDashboard = () => {
     }
   };
 
-  // Fetch total earnings
+  // Fetch earnings
   const fetchEarnings = async () => {
     setLoading(true);
-    setError(null);
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5002/api/ad/admin/earnings', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setEarnings(Number(response.data.totalEarnings) || 0); // Ensure earnings are a number
+      setEarnings(Number(response.data.totalEarnings) || 0);
     } catch (err) {
       setError('Failed to fetch earnings. Please try again.');
     } finally {
@@ -70,70 +70,80 @@ const AdminDashboard = () => {
     }
   };
 
+  // Run fetch functions on initial load
   useEffect(() => {
     fetchProducts();
     fetchOrders();
     fetchEarnings();
   }, []);
 
-  // Handle form input change
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'imageLink') {
-      setFormData({ ...formData, imageLink: files[0] });
+    if (name === 'images' && files) {
+      const imagesArray = Array.from(files);
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: imagesArray,
+      }));
+      setImagePreviews(imagesArray.map((file) => URL.createObjectURL(file)));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
   };
 
-  // Handle form submit for adding or updating a product
+  // Submit form data for adding or editing products
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;  // Prevent multiple submissions while loading
+    console.log("Form Data:", formData);
+
     setLoading(true);
-    setError(null);
     try {
       const token = localStorage.getItem('token');
       const data = new FormData();
-      data.append('name', formData.name);
-      data.append('description', formData.description);
-      data.append('price', formData.price);
-      data.append('rating', formData.rating);
-      data.append('type', formData.type);
-      if (formData.imageLink) {
-        data.append('imageLink', formData.imageLink);
-      }
+      Object.keys(formData).forEach((key) => {
+        if (key === 'images') {
+          formData.images.forEach((image) => data.append('images', image)); // Append multiple images
+        } else {
+          data.append(key, formData[key]);
+        }
+      });
+
+      const requestConfig = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      };
 
       if (isEditing) {
-        await axios.put(`http://localhost:5002/api/ad/admin/products/${currentProductId}`, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        await axios.put(
+          `http://localhost:5002/api/ad/admin/products/${currentProductId}`,
+          data,
+          requestConfig
+        );
       } else {
-        await axios.post('http://localhost:5002/api/ad/admin/products', data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        await axios.post('http://localhost:5002/api/ad/admin/products', data, requestConfig);
       }
+
       resetForm();
       fetchProducts();
     } catch (err) {
       setError('Failed to save the product. Please try again.');
+      console.error(err);  // Log error for debugging
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle delete request
+  // Handle product deletion
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
-    if (!confirmDelete) return;
-
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
     setLoading(true);
-    setError(null);
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:5002/api/ad/admin/products/${id}`, {
@@ -147,50 +157,51 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle edit product action
+  // Edit a product
   const handleEdit = (product) => {
     setFormData({
       name: product.name,
       description: product.description,
       price: product.price,
-      rating: product.rating,
-      imageLink: null,
-      type: product.type,
+      category: product.category,
+      brand: product.brand,
+      stock: product.stock,
+      discount: product.discount,
+      images: [], // Clear previous images on edit
     });
+    setImagePreviews(product.images.map((imageUrl) => imageUrl)); // Set product images if editing
     setIsEditing(true);
     setCurrentProductId(product._id);
   };
 
-  // Cancel the edit operation
+  // Cancel product editing
   const handleCancelEdit = () => {
     resetForm();
     setIsEditing(false);
-    setCurrentProductId(null);
   };
 
-  // Reset form to initial state
+  // Reset form fields
   const resetForm = () => {
     setFormData({
       name: '',
       description: '',
       price: '',
-      rating: 0,
-      imageLink: null,
-      type: '',
+      category: '',
+      brand: '',
+      stock: '',
+      images: [],
+      discount: '',
     });
+    setImagePreviews([]);
     setIsEditing(false);
     setCurrentProductId(null);
   };
 
   return (
     <div className="admin-dashboard">
-     
-
-      {/* Display error or loading states */}
       {loading && <p className="loading-message">Loading...</p>}
       {error && <p className="error-message">{error}</p>}
 
-      {/* Add/Edit Product Form */}
       <form onSubmit={handleSubmit} className="product-form">
         <h2>{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
         <input
@@ -216,62 +227,78 @@ const AdminDashboard = () => {
           type="number"
           min="0"
         />
-        <input
-          name="rating"
-          value={formData.rating}
-          onChange={handleChange}
-          placeholder="Rating (1-5)"
-          required
-          type="number"
-          min="1"
-          max="5"
-        />
-        <input
-          type="file"
-          name="imageLink"
-          accept="image/*"
-          onChange={handleChange}
-        />
-        {formData.imageLink && (
-          <img 
-            src={URL.createObjectURL(formData.imageLink)} 
-            alt="Preview" 
-            className="image-preview" 
-          />
-        )}
-        <label htmlFor="type">Product Type:</label>
+        
         <select
-          id="type"
-          name="type"
-          value={formData.type}
+          id="category"
+          name="category"
+          value={formData.category}
           onChange={handleChange}
           required
         >
-          <option value="">--Select Type--</option>
+          <option value="">--Select Category--</option>
           <option value="Type-1">Type 1</option>
           <option value="Type-2">Type 2</option>
           <option value="Type-3">Type 3</option>
         </select>
-        <button type="submit" disabled={loading} className="submit-button">
+
+        <input
+          name="brand"
+          value={formData.brand}
+          onChange={handleChange}
+          placeholder="Brand Name"
+          required
+        />
+        <input
+          name="stock"
+          value={formData.stock}
+          onChange={handleChange}
+          placeholder="Items in stock"
+          required
+          type="number"
+          min="0"
+        />
+        
+        <input
+          type="file"
+          name="images"
+          accept="image/*"
+          onChange={handleChange}
+          multiple
+        />
+        <div className="image-preview-container">
+          {imagePreviews.map((preview, index) => (
+            <img key={index} src={preview} alt={`Preview ${index + 1}`} className="image-preview" />
+          ))}
+        </div>
+
+        <input
+          name="discount"
+          value={formData.discount}
+          onChange={handleChange}
+          placeholder="Discount"
+          type="number"
+          min="0"
+        />
+
+        <button type="submit" disabled={loading}>
           {isEditing ? 'Update Product' : 'Add Product'}
         </button>
-        {isEditing && <button type="button" onClick={handleCancelEdit} className="cancel-button">Cancel Edit</button>}
+        {isEditing && <button type="button" onClick={handleCancelEdit}>Cancel Edit</button>}
       </form>
 
-      {/* Statistics Section */}
       <section className="statistics">
         <h2>Statistics</h2>
-        <p>Total Earnings: <strong>${typeof earnings === 'number' ? earnings.toFixed(2) : 'N/A'}</strong></p>
+        <p>Total Earnings: <strong>${earnings.toFixed(2)}</strong></p>
       </section>
 
-      {/* Recent Orders Section */}
       <section className="recent-orders">
         <h2>Recent Orders</h2>
         {orders.length > 0 ? (
           <ul>
             {orders.map((order) => (
-              <li key={order._id} className="order-item">
-                Order ID: {order._id} - Total: <strong>${order.total.toFixed(2)}</strong> - Status: {order.status}
+              <li key={order._id}>
+              
+                Order ID: {order._id} - Total: <strong>${order.total.toFixed(2)}</strong> - Status: {order.orderStatus}
               </li>
             ))}
           </ul>
@@ -280,20 +307,15 @@ const AdminDashboard = () => {
         )}
       </section>
 
-      {/* Product List Section */}
       <section className="product-list">
         <h2>Product List</h2>
         {products.length > 0 ? (
           <ul>
             {products.map((product) => (
-              <li key={product._id} className="product-item">
-                <h3>{product.name}</h3>
-                
-                <p>Price: <strong>${product.price.toFixed(2)}</strong></p>
-                
-                <p>Type: <strong>{product.type}</strong></p>
-                <button onClick={() => handleEdit(product)} className="edit-button">Edit</button>
-                <button onClick={() => handleDelete(product._id)} className="delete-button">Delete</button>
+              <li key={product._id}>
+                <p>{product.name} - ${product.price}</p>
+                <button onClick={() => handleEdit(product)}>Edit</button>
+                <button onClick={() => handleDelete(product._id)}>Delete</button>
               </li>
             ))}
           </ul>

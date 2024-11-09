@@ -5,17 +5,17 @@ const { uploadOnCloudinary } = require('../utils/cloudinary');
 const multer = require('multer');
 const fs = require('fs');
 
-// Multer configuration for file uploads
+// Multer configuration for temporary storage of images before Cloudinary upload
 const upload = multer({ dest: 'public/ProductImages/' });
 
 // Get all products for the logged-in admin
 const getAllProductsForAdmin = async (req, res) => {
   try {
-    const adminId = req.user.userId; // Assuming req.user contains the authenticated admin's ID
+    const adminId = req.user.userId;
     const products = await Product.find({ adminId });
     res.status(200).json(products);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching products for admin:", err);
     res.status(500).json({ message: 'Internal server error while fetching products for admin' });
   }
 };
@@ -27,7 +27,7 @@ const getProductsByTypeForAdmin = async (req, res) => {
     const products = await Product.find({ type: req.params.type, adminId });
     res.status(200).json(products);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching products by type for admin:", error);
     res.status(500).json({ message: 'Internal server error while fetching products by type for admin' });
   }
 };
@@ -35,7 +35,7 @@ const getProductsByTypeForAdmin = async (req, res) => {
 // Create a new product for the logged-in admin
 const createProduct = [
   body('name').notEmpty().withMessage('Name is required'),
-  body('type').notEmpty().withMessage('Type is required'),
+ 
   body('price').isNumeric().withMessage('Price must be a number'),
 
   async (req, res) => {
@@ -45,30 +45,28 @@ const createProduct = [
     }
 
     try {
-      // Handle image upload to Cloudinary
-      let imageUrl;
+      let imageUrls = [];
       if (req.files && req.files.length > 0) {
-        const filePath = req.files[0].path; // Get the local file path
-
-        // Check if the file exists at the given path
-        if (!fs.existsSync(filePath)) {
-          return res.status(400).json({ message: 'Uploaded file does not exist at the given path' });
+        console.log(req.files);
+        for (const file of req.files) {
+          console.log(file.path);
+          const response = await uploadOnCloudinary(file.path);
+          if (response && response.url) {
+            console.log("response is:",response);
+            imageUrls.push({ url: response.url, altText: req.body.name });
+          }
+         
+          // Clean up local file after upload
         }
-
-        const response = await uploadOnCloudinary(filePath);
-        if (!response || !response.url) {
-          console.error("Cloudinary upload response:", response);
-          return res.status(400).json({ message: 'Image upload failed' });
-        }
-        imageUrl = response.url; // Get the image URL from Cloudinary response
       } else {
-        return res.status(400).json({ message: 'Image upload is required' });
+        return res.status(400).json({ message: 'At least one image is required' });
       }
 
       const newProduct = new Product({
         ...req.body,
-        imageLink: imageUrl,
+        images: imageUrls,
         adminId: req.user.userId,
+         // The logged-in admin's full name
       });
 
       const savedProduct = await newProduct.save();
@@ -86,7 +84,7 @@ const createProduct = [
 // Update an existing product (only if the product belongs to the logged-in admin)
 const updateProduct = [
   body('name').optional().notEmpty().withMessage('Name must not be empty if provided'),
-  body('type').optional().notEmpty().withMessage('Type must not be empty if provided'),
+
   body('price').optional().isNumeric().withMessage('Price must be a number if provided'),
 
   async (req, res) => {
@@ -96,19 +94,25 @@ const updateProduct = [
     }
 
     try {
-      // Handle image upload to Cloudinary
-      let imageUrl;
+      let imageUrls = [];
       if (req.files && req.files.length > 0) {
-        const filePath = req.files[0].path; // Get the local file path
-        const response = await uploadOnCloudinary(filePath);
-        if (response && response.url) {
-          imageUrl = response.url; // Get the image URL from Cloudinary response
+        for (const file of req.files) {
+          const response = await uploadOnCloudinary(file.path);
+          if (response && response.url) {
+            imageUrls.push({ url: response.url, altText: req.body.name });
+          }
+          fs.unlinkSync(file.path); // Clean up local file after upload
         }
       }
 
+      const updateFields = {
+        ...req.body,
+        ...(imageUrls.length > 0 && { images: imageUrls })
+      };
+
       const updatedProduct = await Product.findOneAndUpdate(
-        { _id: req.params.id, adminId: req.user.userId }, // Ensure only the product's admin can update
-        { ...req.body, ...(imageUrl && { imageLink: imageUrl }) }, // Update image link if a new image is uploaded
+        { _id: req.params.id, adminId: req.user.userId },
+        updateFields,
         { new: true, runValidators: true }
       );
 
@@ -144,13 +148,13 @@ const deleteProduct = async (req, res) => {
 // Function to get recent orders for a specific admin
 const getRecentOrders = async (req, res) => {
   try {
-    const adminId = req.user.userId; // Get the admin's ID from the authenticated user
+    const adminId = req.user.userId;
     const orders = await Order.find({
-      'products.adminId': adminId, // Filter orders that contain products from this admin
+      'products.adminId': adminId,
     })
-      .sort({ createdAt: -1 }) // Sort by creation date descending
-      .limit(10) // Limit to the 10 most recent orders
-      .populate('products.productId'); // Populate product details if necessary
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .populate('products.productId');
 
     res.status(200).json(orders);
   } catch (error) {
@@ -162,29 +166,19 @@ const getRecentOrders = async (req, res) => {
 // Function to get total earnings for a specific admin
 const getTotalEarnings = async (req, res) => {
   try {
-    const adminId = req.user.userId; // Get the admin's ID from the authenticated user
-    console.log('Admin ID:', adminId); // Log the adminId
-   
+    const adminId = req.user.userId;
     const totalEarnings = await Order.aggregate([
-      {
-        $unwind: '$products', // Deconstruct the products array
-      },
-      {
-        $match: {
-          'products.adminId': adminId, // Only include orders with products from this admin
-        },
-      },
+      { $unwind: '$products' },
+      { $match: { 'products.adminId': adminId } },
       {
         $group: {
-          _id: null, // Group all documents
-          totalEarnings: { $sum: { $multiply: ['$products.price', '$products.quantity'] } }, // Sum total earnings based on price and quantity
+          _id: null,
+          totalEarnings: { $sum: { $multiply: ['$products.price', '$products.quantity'] } },
         },
       },
     ]);
-    
-    console.log('Total Earnings Calculation:', totalEarnings); // Log the result for debugging
-    
-    res.status(200).json({ totalEarnings: totalEarnings[0] ? totalEarnings[0].totalEarnings : 0 });
+
+    res.status(200).json({ totalEarnings: totalEarnings[0]?.totalEarnings || 0 });
   } catch (error) {
     console.error('Error fetching total earnings for admin:', error);
     res.status(500).json({ message: 'Internal server error' });
