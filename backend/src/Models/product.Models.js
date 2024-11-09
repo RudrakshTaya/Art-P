@@ -45,14 +45,7 @@ const productSchema = new mongoose.Schema({
       altText: { type: String, default: '' },
     },
   ],
-  // type: {
-  //   type: String,
-  //   enum: ['Type-1', 'Type-2', 'Type-3'], 
-  //   required: true,
-  // },
-  // attributes: {
-  //   type: mongoose.Schema.Types.Mixed,
-  // },
+ 
   ratings: {
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
     reviewCount: { type: Number, default: 0 },
