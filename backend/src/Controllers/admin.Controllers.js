@@ -47,16 +47,16 @@ const createProduct = [
     try {
       let imageUrls = [];
       if (req.files && req.files.length > 0) {
-        console.log(req.files);
+       
         for (const file of req.files) {
-          console.log(file.path);
+         
           const response = await uploadOnCloudinary(file.path);
           if (response && response.url) {
-            console.log("response is:",response);
+           
             imageUrls.push({ url: response.url, altText: req.body.name });
           }
          
-          // Clean up local file after upload
+          
         }
       } else {
         return res.status(400).json({ message: 'At least one image is required' });

@@ -99,7 +99,7 @@ const AdminDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;  // Prevent multiple submissions while loading
-    console.log("Form Data:", formData);
+   
 
     setLoading(true);
     try {

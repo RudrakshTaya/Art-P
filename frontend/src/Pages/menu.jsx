@@ -56,7 +56,7 @@ function MenuPage() {
             type1Products.slice(0, 4).map(product => (
               <div key={product._id} className='product-card'
               onClick={() => handleProductClick(product._id)} >
-                <img src={product.imageLink} alt="Product" className="shop-card-image" />
+                <img src={product.images[0].url} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
                 <p> {product.description}</p>
@@ -79,7 +79,7 @@ function MenuPage() {
             type2Products.slice(0, 4).map(product => (
               <div key={product._id} className='product-card'
               onClick={() => handleProductClick(product._id)}>
-                <img src={product.imageLink} alt="Product" className="shop-card-image" />
+                <img src={product.images[0].url} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
                 <p> {product.description}</p>
@@ -102,7 +102,7 @@ function MenuPage() {
             type3Products.slice(0, 4).map(product => (
               <div key={product._id} className='product-card'
               onClick={() => handleProductClick(product._id)}>
-                <img src={product.imageLink} alt="Product" className="shop-card-image" />
+                <img src={product.images[0].url} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
                 <p> {product.description}</p>
@@ -124,7 +124,7 @@ function MenuPage() {
           ) : (
             miscellaneousProducts.slice(0, 2).map(product => (
               <div key={product._id} className='product-card'>
-                <img src={product.imageLink} alt="Product" className="shop-card-image" />
+                <img src={product.images[0].url} alt="Product" className="shop-card-image" />
                 <h3>{product.name}</h3>
                 <p>Price: ${product.price}</p>
                 <p>Description: {product.description}</p>

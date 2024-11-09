@@ -9,7 +9,7 @@ const CartPage = () => {
   // Check if cart data is defined and has the expected format
   useEffect(() => {
     if (cart) {
-      console.log('Cart items:', cart);
+     
     }
   }, [cart]);
 

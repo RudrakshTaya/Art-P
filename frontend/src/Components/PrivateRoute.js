@@ -12,7 +12,7 @@ const PrivateRoute = memo(({ element, allowedRoles }) => {
   }
 
   // Log current role and allowed roles for debugging
-  console.log('Allowed roles:', allowedRoles, 'Current role:', role); // Use user?.role here
+  //console.log('Allowed roles:', allowedRoles, 'Current role:', role); // Use user?.role here
 
   // If roles are defined, check if the user's role matches the allowed roles
   if (allowedRoles && !allowedRoles.includes(role)) {

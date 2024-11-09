@@ -15,7 +15,7 @@ function Type1ProductsPage() {
       .get('http://localhost:5002/api/products/type/Type-1')
       .then((response) => {
         setProducts(response.data);
-        console.log(response.data)
+       
       })
       
       .catch((error) => {

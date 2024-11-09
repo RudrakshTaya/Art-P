@@ -112,7 +112,7 @@ const Home = () => {
             <Link to={`/products/${products._id}`} className="card-link" key={index}>
             <div className="card">
             <div className='card-image-container'>
-              <img src={products.imageLink} alt={products.name} className="card-image" />
+              <img src={products.images[0].url} alt={products.name} className="card-image" />
               </div>
               <div className="card-lower">
                 <div className="card-left">
