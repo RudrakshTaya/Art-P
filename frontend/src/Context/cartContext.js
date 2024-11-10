@@ -30,7 +30,9 @@ export const CartProvider = ({ children }) => {
   }, [fetchCart]); // Add fetchCart as a dependency (it's now memoized)
 
   // Function to add or update item in the cart
+  
   const addToCart = async (product, quantity) => {
+   
     if (userId) {
       try {
         await fetch('http://localhost:5002/api/cart/add', {
@@ -39,6 +41,7 @@ export const CartProvider = ({ children }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ userId, productId: product._id, quantity }),
+          
         });
         fetchCart(); // Refresh cart after adding
       } catch (error) {

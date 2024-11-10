@@ -41,22 +41,21 @@ function ProductDetail() {
     
     setProcessing(true);
     try {
-      const response = await fetch('http://localhost:5002/api/cart/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId, productId, quantity }),
-      });
+      // const response = await fetch('http://localhost:5002/api/cart/add', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ userId, productId, quantity }),
+      // });
 
-      if (response.ok) {
+      
+       
         addToCart(product, quantity);
         alert('Added to cart successfully!');
         navigate('/cart');
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to add to cart: ${errorData.message || 'Unknown error'}`);
-      }
+      
+      
     } catch (error) {
       console.error('Error adding to cart:', error);
       alert('An error occurred while adding to cart. Please try again later.');
