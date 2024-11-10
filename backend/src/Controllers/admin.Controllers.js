@@ -187,17 +187,17 @@ const getTotalEarnings = async (req, res) => {
 // Update the status of an order (only if it includes products managed by the logged-in admin)
 const updateOrderStatus = async (req, res) => {
   try {
-    const { status } = req.body; // Expected to be 'Pending', 'Shipped', 'Delivered', or 'Cancelled'
+    const { status } = req.body;
     const validStatuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled'];
 
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: 'Invalid status' });
     }
 
-    const adminId = req.user.userId;
+    const adminId = req.user.userId; // Authenticated admin ID
     const orderId = req.params.id;
 
-    // Find the order that includes products managed by the current admin
+    // Find the order containing products managed by the current admin
     const order = await Order.findOne({
       _id: orderId,
       'products.adminId': adminId,
@@ -207,9 +207,21 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: 'Order not found or access denied' });
     }
 
-    // Update the status of the order
+    // Update the order status
     order.orderStatus = status;
-    await order.save();
+
+    // If the order is being cancelled, update stock for each product in the order
+    if (status === 'Cancelled') {
+      for (const item of order.products) {
+        const product = await Product.findById(item.productId);
+        if (product && product.adminId.toString() === adminId) {
+          product.stock += item.quantity; // Restore stock
+          await product.save(); // Save each product update
+        }
+      }
+    }
+
+    await order.save(); // Save the order with updated status
 
     res.status(200).json({
       message: 'Order status updated successfully',
@@ -220,6 +232,7 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: 'Internal server error while updating order status' });
   }
 };
+
 
 
 // Exporting all functions
