@@ -184,6 +184,43 @@ const getTotalEarnings = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+// Update the status of an order (only if it includes products managed by the logged-in admin)
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body; // Expected to be 'Pending', 'Shipped', 'Delivered', or 'Cancelled'
+    const validStatuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled'];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const adminId = req.user.userId;
+    const orderId = req.params.id;
+
+    // Find the order that includes products managed by the current admin
+    const order = await Order.findOne({
+      _id: orderId,
+      'products.adminId': adminId,
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found or access denied' });
+    }
+
+    // Update the status of the order
+    order.orderStatus = status;
+    await order.save();
+
+    res.status(200).json({
+      message: 'Order status updated successfully',
+      order,
+    });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).json({ message: 'Internal server error while updating order status' });
+  }
+};
+
 
 // Exporting all functions
 module.exports = {
@@ -194,4 +231,5 @@ module.exports = {
   deleteProduct,
   getRecentOrders,
   getTotalEarnings,
+  updateOrderStatus,
 };

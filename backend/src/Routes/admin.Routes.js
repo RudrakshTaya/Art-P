@@ -10,6 +10,7 @@ const {
     deleteProduct,
     getRecentOrders,
     getTotalEarnings,
+    updateOrderStatus,
    
 } = require('../Controllers/admin.Controllers'); 
 
@@ -28,6 +29,8 @@ router.get('/admin/orders',authMiddleware , getRecentOrders);
 
 // Route to get total earnings
 router.get('/admin/earnings',authMiddleware, getTotalEarnings);
+
+router.patch('/admin/orders/:id/status', authMiddleware, updateOrderStatus);
 
 
 

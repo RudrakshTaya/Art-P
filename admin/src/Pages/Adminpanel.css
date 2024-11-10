@@ -1,101 +1,105 @@
+/* General layout for the dashboard */
 .admin-dashboard {
-  padding: 20px;
   font-family: Arial, sans-serif;
-}
-
-h1 {
-  text-align: center;
+  padding: 20px;
+  background: linear-gradient(to right, #f0f2f5, #d6e0f0);
   color: #333;
 }
 
-.loading-message, .error-message {
-  color: red;
-  text-align: center;
+h2 {
+  color: #333;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #333;
 }
 
-.product-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
+.loading-message, .error-message {
+  font-size: 1.1rem;
+  color: #ff4c4c;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #fff5f5;
+  border: 1px solid #ffcccc;
   border-radius: 5px;
+}
+
+.product-form, .statistics, .recent-orders, .product-list {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+input, select, button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.status-dropdown {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
   background-color: #f9f9f9;
 }
 
-.product-form input,
-.product-form select {
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.submit-button, .cancel-button, .edit-button, .delete-button {
-  padding: 10px;
-  margin-top: 10px;
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
   border: none;
-  border-radius: 4px;
+  padding: 12px;
   cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.submit-button {
-  background-color: #28a745;
-  color: white;
+button[type="submit"]:hover {
+  background-color: #45a049;
 }
 
-.cancel-button {
-  background-color: #dc3545;
+button[type="button"] {
+  background-color: #ff4c4c;
   color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 8px;
 }
 
-.edit-button {
-  background-color: #007bff;
-  color: white;
+button[type="button"]:hover {
+  background-color: #e63939;
 }
 
-.delete-button {
-  background-color: #dc3545;
-  color: white;
+.image-preview-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
 .image-preview {
-  width: 100px;
-  height: auto;
-  margin-top: 10px;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
-.statistics, .recent-orders, .product-list {
-  margin-top: 20px;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-.order-item {
-  margin: 5px 0;
+ul li {
   padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border-bottom: 1px solid #ddd;
 }
 
-.product-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+ul li p {
   margin: 5px 0;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-}
-
-.product-actions {
-  display: flex;
-  gap: 10px;
-}
-
-@media (max-width: 768px) {
-  .product-form {
-    width: 90%;
-  }
 }
