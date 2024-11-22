@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+  // Basic Product Information
   name: {
     type: String,
     required: true,
@@ -11,6 +12,8 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  
+  // Price and Category
   price: {
     type: Number,
     required: true,
@@ -19,11 +22,32 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Type-1', 'Type-2', 'Type-3'], 
+    enum: [
+      'Original Handmade Art and Decor', 
+      'Personalized Clothing and Accessories', 
+      'DIY Kits and Craft Materials', 
+      'Customized Home and Gift Items', 
+      'Sustainable and Upcycled Crafts', 
+      'Limited Edition Collaborative Products'
+    ],
   },
+  
+  // Attributes (for flexible product-specific details)
   attributes: {
     type: mongoose.Schema.Types.Mixed,
   },
+
+  // Specific Fields for Customization or Personalization
+  isCustomizable: {
+    type: Boolean,
+    default: false,
+  },
+  customizationOptions: {
+    type: [String], // List of options like color, size, text input for engravings, etc.
+    default: [],
+  },
+
+  // Brand and Inventory Information
   brand: {
     type: String,
     required: true,
@@ -34,32 +58,35 @@ const productSchema = new mongoose.Schema({
     min: 0,
     default: 0,
   },
-  // sku: {
-  //   type: String,
-  //   required: true,
-  //   unique: true,
-  // },
+
+  // Images
   images: [
     {
       url: { type: String, required: true },
       altText: { type: String, default: '' },
     },
   ],
- 
+  
+  // Ratings
   ratings: {
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
     reviewCount: { type: Number, default: 0 },
   },
+  
+  // Discount
   discount: {
     percentage: { type: Number, default: 0, min: 0, max: 100 },
     expiresAt: { type: Date },
   },
+
+  // Admin ID
   adminId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
- 
+  
+  // Timestamps
   createdAt: {
     type: Date,
     default: Date.now,
@@ -70,14 +97,13 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-// Update the `updatedAt` field automatically on each save
+// Middleware: Automatically update `updatedAt` on each save
 productSchema.pre('save', function(next) {
- 
   this.updatedAt = Date.now();
   next();
 });
 
-// Create a product model
+// Create and export Product model
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;

@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import './Navbar.css';
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State for logout popup
-    const { isLoggedIn, signOut,username } = useAuth(); // Get isLoggedIn and signOut from useAuth
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    const handleSignInClick = () => {
-        localStorage.setItem('redirectPath', location.pathname);
-    };
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Track dropdown visibility
+    const { isLoggedIn, signOut, username } = useAuth();
 
     const handleLogout = () => {
         signOut();
-        navigate('/'); // Redirect to home or any other page after logout
+        setIsDropdownOpen(false); // Close dropdown after logout
     };
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
     };
 
     return (
@@ -28,34 +21,36 @@ const Navbar = () => {
             <div className="navbar-brand">
                 <Link to="/">Craft Aura</Link>
             </div>
-            <div className={`nav-links ${isOpen ? 'open' : ''}`}>
+            <div className="nav-links">
                 <Link to="/menu">Menu</Link>
                 <Link to="/Challenges">Challenges</Link>
                 <Link to="/Gallery">Gallery</Link>
-                <Link to="/Cart">Cart</Link> {/* Add Cart link */}
-                
-                {!isLoggedIn ? (
-                    <Link to="/Signin" onClick={handleSignInClick}>Sign In</Link>
-                ) : (
+                <Link to="/Cart">Cart</Link>
+
+                {isLoggedIn ? (
                     <>
-                        <span 
-                            className="username" 
-                            onClick={() => setShowLogoutPopup(!showLogoutPopup)}
-                        >
+                        <span className="username" onClick={toggleDropdown}>
                             {username || 'Rudraksh'}
                         </span>
-                        {showLogoutPopup && (
-                            <div className="logout-popup">
-                                <p>Are you sure you want to logout?</p>
-                                <button onClick={handleLogout}>Yes, Logout</button>
-                                <button onClick={() => setShowLogoutPopup(false)}>Cancel</button>
+                        {isDropdownOpen && (
+                            <div className="dropdown-menu">
+                                <Link to="/profile">Account Information</Link>
+                                <Link to="/orders">Order History</Link>
+                                <div className="dropdown-divider"></div>
+                                <Link to="/wishlist">Wishlist</Link>
+                                <Link to="/payment-methods">Payment Methods</Link>
+                                <Link to="/notifications">Subscriptions & Notifications</Link>
+                                <div className="dropdown-divider"></div>
+                                <Link to="/returns">Returns & Refunds</Link>
+                                <Link to="/security">Security & Privacy</Link>
+                                <Link to="/support">Help & Support</Link>
+                                <button onClick={handleLogout}>Logout</button>
                             </div>
                         )}
                     </>
+                ) : (
+                    <Link to="/Signin">Sign In</Link>
                 )}
-            </div>
-            <div className="nav-toggle" onClick={toggleMenu}>
-                ☰
             </div>
         </nav>
     );

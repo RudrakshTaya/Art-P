@@ -21,6 +21,7 @@ const uploadOnCloudinary = async (localFilePath, retries = 10) => {
         // Check if the file exists
         try {
             await fs.access(localFilePath);
+            
         } catch (err) {
             console.error("Local file does not exist:", localFilePath);
             return null;

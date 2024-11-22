@@ -1,105 +1,183 @@
-/* General layout for the dashboard */
+/* Admin Dashboard Main Styles */
 .admin-dashboard {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  background: linear-gradient(to right, #f0f2f5, #d6e0f0);
-  color: #333;
+  font-family: 'Roboto', sans-serif; /* Updated font for a sleek, modern feel */
+  padding: 30px;
+  background: linear-gradient(135deg, #f0f4f8, #c9d6e3); /* Softer gradient for a classy look */
+  color: #4a4a4a; /* Slightly softer text color */
+  max-width: 1200px;
+  margin: 30px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* Section Headers */
 h2 {
   color: #333;
-  font-size: 1.6rem;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #333;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #4CAF50; /* A touch of green for sophistication */
+  padding-bottom: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
+/* Loading and Error Messages */
 .loading-message, .error-message {
-  font-size: 1.1rem;
-  color: #ff4c4c;
-  padding: 10px;
-  margin: 10px 0;
-  background-color: #fff5f5;
-  border: 1px solid #ffcccc;
-  border-radius: 5px;
+  font-size: 1.2rem;
+  color: #f44336; /* Brighter red for clearer visibility */
+  padding: 15px;
+  margin: 20px 0;
+  background-color: #fce4e4; /* Lighter red background for contrast */
+  border: 1px solid #f8d7da;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
 }
 
+/* Form and Panels Styling */
 .product-form, .statistics, .recent-orders, .product-list {
   background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Softer shadow for modern feel */
+  margin-bottom: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-input, select, button {
+.product-form:hover, .statistics:hover, .recent-orders:hover, .product-list:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Hover effect for interactivity */
+}
+
+input, select, textarea {
   display: block;
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  font-size: 1rem;
+  padding: 14px;
+  margin: 12px 0;
+  font-size: 1.1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa; /* Light background for input fields */
+  transition: border-color 0.3s ease;
 }
 
-.status-dropdown {
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
+input:focus, select:focus, textarea:focus {
+  border-color: #4CAF50; /* Highlight fields on focus */
+  outline: none;
 }
 
+/* Submit and Button Styling */
 button[type="submit"] {
   background-color: #4CAF50;
   color: white;
   font-weight: bold;
   border: none;
-  padding: 12px;
+  padding: 15px 20px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button[type="submit"]:hover {
   background-color: #45a049;
+  transform: scale(1.05); /* Slight scaling for button hover */
 }
 
 button[type="button"] {
   background-color: #ff4c4c;
   color: white;
+  font-weight: bold;
   border: none;
-  padding: 10px;
+  padding: 12px 18px;
   cursor: pointer;
-  border-radius: 4px;
-  margin-top: 8px;
+  border-radius: 8px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button[type="button"]:hover {
   background-color: #e63939;
+  transform: scale(1.05);
 }
 
+/* Image Previews */
 .image-preview-container {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 15px;
+  margin-top: 20px;
   flex-wrap: wrap;
 }
 
 .image-preview {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
+.image-preview:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Lists */
 ul {
   list-style-type: none;
   padding: 0;
 }
 
 ul li {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  transition: background-color 0.3s ease;
+}
+
+ul li:hover {
+  background-color: #f8f8f8; /* Subtle background change on hover */
 }
 
 ul li p {
-  margin: 5px 0;
+  margin: 6px 0;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Order Status Dropdown */
+.order-list select {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  background-color: #fafafa;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.order-list select:focus {
+  border-color: #4CAF50; /* Highlight on focus */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 20px;
+  }
+
+  .product-form, .statistics, .recent-orders, .product-list {
+    padding: 15px;
+  }
+
+  .image-preview-container {
+    gap: 10px;
+  }
+
+  ul li {
+    padding: 10px;
+  }
 }

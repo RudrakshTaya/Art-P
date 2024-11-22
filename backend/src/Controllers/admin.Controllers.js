@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const { uploadOnCloudinary } = require('../utils/cloudinary');
 const multer = require('multer');
 const fs = require('fs');
+const { log } = require('console');
 
 // Multer configuration for temporary storage of images before Cloudinary upload
 const upload = multer({ dest: 'public/ProductImages/' });
@@ -35,9 +36,8 @@ const getProductsByTypeForAdmin = async (req, res) => {
 // Create a new product for the logged-in admin
 const createProduct = [
   body('name').notEmpty().withMessage('Name is required'),
- 
   body('price').isNumeric().withMessage('Price must be a number'),
-
+  
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -47,26 +47,26 @@ const createProduct = [
     try {
       let imageUrls = [];
       if (req.files && req.files.length > 0) {
-       
+        // Upload images to Cloudinary
         for (const file of req.files) {
-         
           const response = await uploadOnCloudinary(file.path);
           if (response && response.url) {
-           
             imageUrls.push({ url: response.url, altText: req.body.name });
           }
-         
-          
         }
       } else {
         return res.status(400).json({ message: 'At least one image is required' });
       }
-
+      // Create a new product document
       const newProduct = new Product({
         ...req.body,
+      discount: {
+    percentage: req.body.discount, // or whatever you are calling it
+    expiresAt: req.body.discountExpiresAt, // and the expiration date
+  },
+        attributes:req.body.subcategory,
         images: imageUrls,
-        adminId: req.user.userId,
-         // The logged-in admin's full name
+        adminId: req.user.userId, // The logged-in admin's ID
       });
 
       const savedProduct = await newProduct.save();
@@ -84,9 +84,8 @@ const createProduct = [
 // Update an existing product (only if the product belongs to the logged-in admin)
 const updateProduct = [
   body('name').optional().notEmpty().withMessage('Name must not be empty if provided'),
-
   body('price').optional().isNumeric().withMessage('Price must be a number if provided'),
-
+  
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -96,6 +95,7 @@ const updateProduct = [
     try {
       let imageUrls = [];
       if (req.files && req.files.length > 0) {
+        // Upload images to Cloudinary
         for (const file of req.files) {
           const response = await uploadOnCloudinary(file.path);
           if (response && response.url) {
@@ -107,7 +107,7 @@ const updateProduct = [
 
       const updateFields = {
         ...req.body,
-        ...(imageUrls.length > 0 && { images: imageUrls })
+        ...(imageUrls.length > 0 && { images: imageUrls }), // Only update images if new ones are provided
       };
 
       const updatedProduct = await Product.findOneAndUpdate(
@@ -117,7 +117,7 @@ const updateProduct = [
       );
 
       if (!updatedProduct) {
-        return res.status(404).json({ message: 'Product not found' });
+        return res.status(404).json({ message: 'Product not found or access denied' });
       }
 
       res.status(200).json({
@@ -136,7 +136,7 @@ const deleteProduct = async (req, res) => {
   try {
     const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id, adminId: req.user.userId });
     if (!deletedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: 'Product not found or access denied' });
     }
     res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
@@ -184,6 +184,7 @@ const getTotalEarnings = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 // Update the status of an order (only if it includes products managed by the logged-in admin)
 const updateOrderStatus = async (req, res) => {
   try {
@@ -233,9 +234,6 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-
-
-// Exporting all functions
 module.exports = {
   getProductsByTypeForAdmin,
   getAllProductsForAdmin,

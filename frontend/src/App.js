@@ -15,6 +15,7 @@ import Type2ProductsPage from './Pages/Type2page ';
 import Type3ProductsPage from './Pages/Type3page';
 import ProductDetail from './Components/productDetailPage';
 import AdminPanel from './Pages/AdminPanel';
+import ProfilePage from './Components/profilePage';
 
 const App = () => {
   return (
@@ -33,9 +34,13 @@ const App = () => {
           <Route path="/cart" element={<PrivateRoute element={<Cart />} />} />
           
           {/* Type-specific product routes (public) */}
-          <Route path="/products/type/Type-1" element={<Type1ProductsPage />} />
-          <Route path="/products/type/Type-2" element={<Type2ProductsPage />} />
-          <Route path="/products/type/Type-3" element={<Type3ProductsPage />} />
+          <Route path="/products/type/Original Handmade Art and Decor" element={<Type1ProductsPage />} />
+          <Route path="/products/type/Personalized Clothing and Accessories" element={<Type2ProductsPage />} />
+          <Route path="/products/type/DIY Kits and Craft Materials" element={<Type3ProductsPage />} />
+          <Route path="/products/type/Customized Home and Gift Items" element={<Type1ProductsPage />} />
+          <Route path="/products/type/Sustainable and Upcycled Crafts" element={<Type2ProductsPage />} />
+          <Route path="/products/type/Limited Edition Collaborative Products" element={<Type3ProductsPage />} />
+          
           
           {/* Product Detail (public) */}
           <Route path="/products/:productId" element={<ProductDetail />} />
@@ -48,6 +53,7 @@ const App = () => {
           
           {/* Confirmation (public route) */}
           <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/profile" element={<ProfilePage/>} />
         </Routes>
       </main>
     </Router>

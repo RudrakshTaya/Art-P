@@ -10,9 +10,9 @@ function Type1ProductsPage() {
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   useEffect(() => {
-    // Fetch products of type 'Type1' from the backend
+    
     axios
-      .get('http://localhost:5002/api/products/type/Type-2')
+      .get('http://localhost:5002/api/products/type/Personalized Clothing and Accessories')
       .then((response) => {
         setProducts(response.data);
       })
@@ -95,7 +95,7 @@ function Type1ProductsPage() {
               onClick={() => handleProductClick(product._id)} // Add onClick event
             >
               <img
-                src={product.imageLink}
+                src={product.images[0].url}
                 alt="Product"
                 className="shop-card-image"
               />

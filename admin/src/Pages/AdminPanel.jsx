@@ -11,16 +11,38 @@ const AdminDashboard = () => {
     description: '',
     price: '',
     category: '',
+    subcategory: '',
     brand: '',
     stock: '',
     images: [],
     discount: '',
+    discountExpiresAt:'',
+    isCustomizable: false,
+    customizationOptions: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [imagePreviews, setImagePreviews] = useState([]);
+
+  const categories = [
+    'Original Handmade Art and Decor',
+    'Personalized Clothing and Accessories',
+    'DIY Kits and Craft Materials',
+    'Customized Home and Gift Items',
+    'Sustainable and Upcycled Crafts',
+    'Limited Edition Collaborative Products',
+  ];
+
+  const subcategories = {
+    'Original Handmade Art and Decor': ['Paintings and Sculptures', 'Wall Hangings', 'Handmade Pottery'],
+    'Personalized Clothing and Accessories': ['Custom Embroidered Apparel', 'Handmade Jewelry'],
+    'DIY Kits and Craft Materials': ['Candle-Making Kits', 'Embroidery Kits', 'Woodworking Kits'],
+    'Customized Home and Gift Items': ['Personalized Gifts', 'Keepsake Boxes'],
+    'Sustainable and Upcycled Crafts': ['Eco-Friendly Decor', 'Sustainable Home Goods'],
+    'Limited Edition Collaborative Products': ['Exclusive Art Pieces', 'Collaborative Home Decor'],
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -74,7 +96,7 @@ const AdminDashboard = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type, checked } = e.target;
     if (name === 'images' && files) {
       const imagesArray = Array.from(files);
       setFormData((prevData) => ({
@@ -82,6 +104,11 @@ const AdminDashboard = () => {
         [name]: imagesArray,
       }));
       setImagePreviews(imagesArray.map((file) => URL.createObjectURL(file)));
+    } else if (type === 'checkbox') {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -154,12 +181,16 @@ const AdminDashboard = () => {
       description: product.description,
       price: product.price,
       category: product.category,
+      subcategory: product.subcategory || '',
       brand: product.brand,
       stock: product.stock,
       discount: product.discount,
+      discountExpiresAt: product.discountExpiresAt,
       images: [],
+      isCustomizable: product.isCustomizable,
+      customizationOptions: product.customizationOptions.join(', '),
     });
-    setImagePreviews(product.images.map((imageUrl) => imageUrl));
+    setImagePreviews(product.images.map((image) => image.url));
     setIsEditing(true);
     setCurrentProductId(product._id);
   };
@@ -175,10 +206,14 @@ const AdminDashboard = () => {
       description: '',
       price: '',
       category: '',
+      subcategory: '',
       brand: '',
       stock: '',
       images: [],
       discount: '',
+      discountExpiresAt: '',
+      isCustomizable: false,
+      customizationOptions: '',
     });
     setImagePreviews([]);
     setIsEditing(false);
@@ -210,40 +245,52 @@ const AdminDashboard = () => {
       <form onSubmit={handleSubmit} className="product-form">
         <h2>{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
         <input name="name" value={formData.name} onChange={handleChange} placeholder="Product Name" required />
-        <input name="description" value={formData.description} onChange={handleChange} placeholder="Product Description" required />
+        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Product Description" required />
         <input name="price" value={formData.price} onChange={handleChange} placeholder="Price ($)" required type="number" min="0" />
         <select name="category" value={formData.category} onChange={handleChange} required>
           <option value="">--Select Category--</option>
-          <option value="Type-1">Type 1</option>
-          <option value="Type-2">Type 2</option>
-          <option value="Type-3">Type 3</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
         </select>
+        {formData.category && (
+          <select name="subcategory" value={formData.subcategory} onChange={handleChange}>
+            <option value="">--Select Subcategory--</option>
+            {subcategories[formData.category]?.map((sub, index) => (
+              <option key={index} value={sub}>{sub}</option>
+            ))}
+          </select>
+        )}
         <input name="brand" value={formData.brand} onChange={handleChange} placeholder="Brand Name" required />
         <input name="stock" value={formData.stock} onChange={handleChange} placeholder="Items in stock" required type="number" min="0" />
         <input type="file" name="images" accept="image/*" onChange={handleChange} multiple />
-        <div className="image-preview-container">
+        <div className="image-previews">
           {imagePreviews.map((preview, index) => (
-            <img key={index} src={preview} alt={`Preview ${index + 1}`} className="image-preview" />
+            <img key={index} src={preview} alt="Product preview" className="image-preview" />
           ))}
         </div>
-        <input name="discount" value={formData.discount} onChange={handleChange} placeholder="Discount" type="number" min="0" />
-
-        <button type="submit" disabled={loading}>{isEditing ? 'Update Product' : 'Add Product'}</button>
-        {isEditing && <button type="button" onClick={handleCancelEdit}>Cancel Edit</button>}
+        <label>
+          <input type="checkbox" name="isCustomizable" checked={formData.isCustomizable} onChange={handleChange} />
+          Customizable
+        </label>
+        {formData.isCustomizable && (
+          <textarea name="customizationOptions" value={formData.customizationOptions} onChange={handleChange} placeholder="Customization Options (comma-separated)" />
+        )}
+        <input name="discount" value={formData.discount} onChange={handleChange} placeholder="Discount(%)" required type="percentage" min="0" />
+        <input name="discountExpiresAt" value={formData.discountExpiresAt} onChange={handleChange} placeholder="Discount Expiration Date"required type="date"
+/>
+        <button type="submit">{isEditing ? 'Update Product' : 'Add Product'}</button>
+        {isEditing && <button type="button" onClick={handleCancelEdit}>Cancel</button>}
       </form>
 
-      <section className="statistics">
-        <h2>Statistics</h2>
-        <p>Total Earnings: <strong>${earnings.toFixed(2)}</strong></p>
-      </section>
-
-      <section className="recent-orders">
+        <section className="recent-orders">
         <h2>Recent Orders</h2>
         {orders.length > 0 ? (
           <ul>
             {orders.map((order) => (
               <li key={order._id}>
                 <p>Order ID: {order._id} - Total: <strong>${order.total.toFixed(2)}</strong></p>
+            
                 <p>Status:
                   <select value={order.orderStatus} onChange={(e) => handleStatusChange(order._id, e.target.value)} className="status-dropdown">
                     {['Pending', 'Shipped', 'Delivered', 'Cancelled'].map(status => (
@@ -257,6 +304,7 @@ const AdminDashboard = () => {
         ) : <p>No recent orders found.</p>}
       </section>
 
+
       <section className="product-list">
         <h2>Product List</h2>
         {products.length > 0 ? (
@@ -264,6 +312,7 @@ const AdminDashboard = () => {
             {products.map((product) => (
               <li key={product._id}>
                 <p><strong>{product.name}</strong> - ${product.price}</p>
+                <p> Stock:{product.stock}</p>
                 <button onClick={() => handleEdit(product)}>Edit</button>
                 <button onClick={() => handleDelete(product._id)}>Delete</button>
               </li>

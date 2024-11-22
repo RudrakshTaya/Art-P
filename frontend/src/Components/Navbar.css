@@ -3,110 +3,134 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 15px 30px;
     background-color: #333;
-    color: white;
-    position: relative; /* Ensure proper stacking context */
-    z-index: 1000; /* Ensure navbar is above other content */
+    color: #fff;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand a {
-    font-size: 24px;
-    font-weight: bolder;
-    font-family: cursive;
+    font-size: 26px;
+    font-weight: bold;
+    font-family: 'Brush Script MT', cursive;
     text-decoration: none;
-    color: white;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand a:hover {
+    color: #ff6347;
 }
 
 .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 25px;
+    align-items: center;
 }
 
 .nav-links a {
-    color: white;
-    text-decoration: none; /* Remove underline */
+    color: #fff;
+    text-decoration: none;
     font-size: 18px;
+    font-weight: 500;
     transition: color 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 4px;
 }
-
 
 .nav-links a:hover {
-    color: #ff6347; /* Change color on hover */
-    
-}
-
-/* Mobile menu toggle */
-.nav-toggle {
-    display: none;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 1; /* Ensure toggle button is above other content */
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .nav-links {
-        position: absolute;
-        top: 60px; /* Adjust based on navbar height */
-        left: 0;
-        right: 0;
-        background-color: #333;
-        flex-direction: column;
-        display: none;
-        z-index: 1; /* Ensure links are above other content */
-    }
-
-    .nav-links.open {
-        display: flex;
-    }
-
-    .nav-toggle {
-        display: block;
-    }
+    color: #ff6347;
+    background-color: rgba(255, 99, 71, 0.1);
 }
 
 /* Username styling */
 .username {
     cursor: pointer;
     font-size: 18px;
-    color: white;
+    color: #fff;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
     transition: color 0.3s ease;
-    
 }
 
 .username:hover {
     color: #ff6347;
-    
 }
 
-/* Logout popup styling */
-.logout-popup {
+/* Dropdown menu styling */
+.dropdown-menu {
     position: absolute;
-    top: 60px; /* Adjust based on navbar height */
-    right: 20px; /* Adjust based on navbar width */
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 15; /* Ensure popup is above other content */
+    top: 60px;
+    right: 20px;
+    background-color: #444;
+    color: #fff;
+    padding: 15px;
+    width: 220px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
 }
 
-.logout-popup p {
-    margin: 0 0 10px;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.logout-popup button {
-    background-color: #ff6347;
-    color: white;
+.dropdown-menu a,
+.dropdown-menu button {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    background: none;
     border: none;
-    padding: 5px 10px;
     cursor: pointer;
-    border-radius: 5px;
-    margin-right: 5px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.logout-popup button:hover {
-    background-color: #ff4500;
+/* Icon styling inside dropdown items */
+.dropdown-menu a::before,
+.dropdown-menu button::before {
+    content: '⬤'; /* Placeholder for an icon */
+    margin-right: 10px;
+    font-size: 10px;
+    color: #ff6347;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: rgba(255, 99, 71, 0.15);
+    transform: translateX(5px);
+}
+
+.dropdown-menu a:hover::before,
+.dropdown-menu button:hover::before {
+    transform: scale(1.2);
+}
+
+/* Divider between certain dropdown sections */
+.dropdown-divider {
+    height: 1px;
+    background-color: #666;
+    margin: 5px 0;
+    width: 100%;
 }
