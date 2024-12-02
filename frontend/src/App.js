@@ -14,7 +14,7 @@ import Type1ProductsPage from './Pages/Type1page';
 import Type2ProductsPage from './Pages/Type2page ';
 import Type3ProductsPage from './Pages/Type3page';
 import ProductDetail from './Components/productDetailPage';
-import AdminPanel from './Pages/AdminPanel';
+
 import ProfilePage from './Components/profilePage';
 
 const App = () => {
@@ -45,11 +45,7 @@ const App = () => {
           {/* Product Detail (public) */}
           <Route path="/products/:productId" element={<ProductDetail />} />
           
-          {/* Admin Panel route (only accessible to admins) */}
-          <Route
-            path="/admin"
-            element={<PrivateRoute element={<AdminPanel />} allowedRoles={['admin']} />}
-          />
+         
           
           {/* Confirmation (public route) */}
           <Route path="/confirmation" element={<Confirmation />} />

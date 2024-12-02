@@ -141,9 +141,7 @@ function Type1ProductsPage() {
         ) : (
           <div className="products-grid">
             {filteredCards.map((product) => {
-              const discountedPrice = product.discount?.percentage
-                ? (product.price * (1 - product.discount.percentage / 100)).toFixed(2)
-                : product.price;
+              
 
               return (
                 <div
@@ -229,10 +227,10 @@ function Type1ProductsPage() {
     <div class="footer-column">
       <h4>Follow Us</h4>
       <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+        <a href="#home"><i class="fab fa-facebook-f"></i></a>
+        <a href="#home"><i class="fab fa-twitter"></i></a>
+        <a href="#home"><i class="fab fa-instagram"></i></a>
+        <a href="#home"><i class="fab fa-pinterest-p"></i></a>
       </div>
     </div>
   </div>
