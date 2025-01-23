@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ProductCard from '../MAINcomponents/productCard';
 import './Type1page.css';
+
 
 function Type1ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -55,14 +57,19 @@ function Type1ProductsPage() {
   }, [priceRangeFilter, categoryFilter, ratingFilter, searchTerm, products]);
 
   const handleProductClick = (productId) => navigate(`/products/${productId}`);
+  const handleQuickView = (productId) => console.log(`Quick view for product ${productId}`);
+  const handleAddToCart = (productId) => console.log(`Added product ${productId} to cart`);
+
+  const resetFilters = () => {
+    setPriceRangeFilter([0, 1000]);
+    setSearchTerm('');
+    setCategoryFilter('All');
+    setRatingFilter(0);
+  };
 
   return (
     <div className="products-page">
-    
-    
-    <h1 className="page-title">Original Handmade Art and Decor</h1>
-    
-
+      <h1 className="page-title">Original Handmade Art and Decor</h1>
       <div className="search-bar">
         <input
           type="text"
@@ -70,11 +77,9 @@ function Type1ProductsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <div className="filters-button">
-          <button onClick={() => setShowFilters(!showFilters)}>
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
-          </button>
-        </div>
+        <button onClick={() => setShowFilters(!showFilters)}>
+          {showFilters ? 'Hide Filters' : 'Show Filters'}
+        </button>
       </div>
 
       {showFilters && (
@@ -102,6 +107,7 @@ function Type1ProductsPage() {
               <option value="5">5 Stars</option>
             </select>
           </div>
+          <button className="reset-filters" onClick={resetFilters}>Reset Filters</button>
         </div>
       )}
 
@@ -117,20 +123,6 @@ function Type1ProductsPage() {
         ))}
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <div className="products-container">
         {loading ? (
           <div className="loading-spinner">Loading...</div>
@@ -140,109 +132,19 @@ function Type1ProductsPage() {
           <p>No products found.</p>
         ) : (
           <div className="products-grid">
-            {filteredCards.map((product) => {
-              
-
-              return (
-                <div
+            {filteredCards.map((product) => (
+              <ProductCard
                 key={product._id}
-                className="product-card"
-                onClick={() => handleProductClick(product._id)}
-              >
-                <div className="product-image-container">
-                  <img
-                    src={product.images[0]?.url || '/placeholder-image.png'}
-                    alt={product.images[0]?.altText || 'Product'}
-                    className="product-image"
-                  />
-                  {product.discount?.percentage && (
-                    <span className="discount-badge">
-                      {product.discount.percentage}% OFF
-                    </span>
-                  )}
-                </div>
-                <hr className="divider" />
-                <div className="product-details">
-                  <h3>{product.name}</h3>
-                  <div className="price-container">
-                    {product.discount?.percentage ? (
-                      <>
-                        <span className="discounted-price">
-                          ${(
-                            product.price -
-                            (product.price * product.discount.percentage) / 100
-                          ).toFixed(2)}
-                        </span>
-                        <span className="original-price">${product.price}</span>
-                      </>
-                    ) : (
-                      <span className="discounted-price">${product.price}</span>
-                    )}
-                  </div>
-                  <p>Rating: {product.ratings?.averageRating || 'N/A'}</p>
-                </div>
-              </div>
-              
-              
-              );
-            })}
+                product={product}
+                onProductClick={handleProductClick}
+                onQuickView={handleQuickView}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
           </div>
         )}
       </div>
-
-
-
-
-
-
-
-      <div class="footer">
-  <div class="footer-container">
-    <div class="footer-column">
-      <h4>About Us</h4>
-      <p>
-        Discover unique, handmade, and creative products crafted with love and passion. 
-        Our mission is to bring the finest art and creativity to your doorstep.
-      </p>
     </div>
-
-    <div class="footer-column">
-      <h4>Quick Links</h4>
-      <ul>
-        <li><a href="/shop">Shop</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/faq">FAQ</a></li>
-        <li><a href="/terms">Terms of Service</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h4>Contact Us</h4>
-      <p>Email: <a href="mailto:support@example.com">support@example.com</a></p>
-      <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
-      <p>Address: 123 Creative Lane, Art City, World</p>
-    </div>
-
-    <div class="footer-column">
-      <h4>Follow Us</h4>
-      <div class="social-icons">
-        <a href="#home"><i class="fab fa-facebook-f"></i></a>
-        <a href="#home"><i class="fab fa-twitter"></i></a>
-        <a href="#home"><i class="fab fa-instagram"></i></a>
-        <a href="#home"><i class="fab fa-pinterest-p"></i></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2024 Your E-Commerce Site. All Rights Reserved.</p>
-  </div>
-</div>
-
-    </div>
-
-    
   );
 }
 

@@ -12,6 +12,8 @@ const Signup = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [businessName, setBusinessName] = useState('');
     const [businessEmail, setBusinessEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // for loading state
+    const [error, setError] = useState(null); // for error state
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -21,6 +23,9 @@ const Signup = () => {
             return;
         }
 
+        setIsLoading(true);
+        setError(null);
+
         try {
             const payload = {
                 username,
@@ -28,8 +33,7 @@ const Signup = () => {
                 password,
                 role,
                 phoneNumber,
-                fullName:role==='admin'? businessName : fullName,
-                
+                fullName: role === 'admin' ? businessName : fullName,
             };
 
             const response = await fetch('http://localhost:5002/api/auth/signup', {
@@ -41,17 +45,19 @@ const Signup = () => {
             });
               
             const data = await response.json();
-            console.log(data);
+            setIsLoading(false);
+
             if (response.ok) {
-                alert('User registered successfully');
+                alert('User registered successfully! Please check your email to verify your account.');
                 // Optionally redirect to the sign-in page
                 // navigate('/signin');
             } else {
-                alert(data.message || 'Registration failed. Please try again.');
+                setError(data.message || 'Registration failed. Please try again.');
             }
         } catch (error) {
+            setIsLoading(false);
             console.error('Signup error:', error);
-            alert('Something went wrong. Please try again later.');
+            setError('Something went wrong. Please try again later.');
         }
     };
 
@@ -123,8 +129,11 @@ const Signup = () => {
                     required
                 />
 
-                <button type="submit">Sign Up</button>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Signing Up...' : 'Sign Up'}
+                </button>
             </form>
+            {error && <p className="error">{error}</p>}
             <p>
                 Already have an account? <Link to="/signin">Sign In</Link>
             </p>

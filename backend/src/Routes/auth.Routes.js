@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const { signup, signin, adminSignup, adminSignin } = require('../Controllers/auth.Controllers');
 
+
 // Input validation middleware for user signup
 const signupValidation = [
   body('username').notEmpty().withMessage('Username is required'), // Added username validation

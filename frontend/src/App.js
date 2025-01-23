@@ -14,9 +14,11 @@ import Type1ProductsPage from './Pages/Type1page';
 import Type2ProductsPage from './Pages/Type2page ';
 import Type3ProductsPage from './Pages/Type3page';
 import ProductDetail from './Components/productDetailPage';
-
-import ProfilePage from './Components/profilePage';
-
+import ResetPassword from './MAINcomponents/reset-pass';
+import ForgotPassword from './MAINcomponents/forgot-pass';
+import VerifyEmail from './MAINcomponents/verifyEmail';
+import AccountInfo from './accManagement/accInfo';
+import OrderHistory from './accManagement/orderHistory';
 const App = () => {
   return (
     <Router>
@@ -49,7 +51,11 @@ const App = () => {
           
           {/* Confirmation (public route) */}
           <Route path="/confirmation" element={<Confirmation />} />
-          <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/account-info" element={<AccountInfo />} />
+          <Route path="/order-history" element={<OrderHistory />} />
         </Routes>
       </main>
     </Router>

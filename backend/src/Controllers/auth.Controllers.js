@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken');
 const User = require('../Models/user.Models'); // Ensure this path matches your project structure
+const { sendEmail } = require('../Controllers/userVerification'); // Utility to send emails
 
-// Signup Controller
+// Signup Controller with Email Verification
 const signup = async (req, res) => {
-    const { username, email, password,  role, fullName, phoneNumber } = req.body; 
+    const { username, email, password, role, fullName, phoneNumber } = req.body;
 
     try {
-        
-        let user = await User.findOne({ 
-            $or: [{ email: email }, { phoneNumber: phoneNumber }] 
+        // Check if the user already exists
+        let user = await User.findOne({
+            $or: [{ email }, { phoneNumber }],
         });
         if (user) {
             return res.status(400).json({ message: 'User already exists' });
@@ -18,45 +19,37 @@ const signup = async (req, res) => {
         user = new User({
             username,
             email,
-            password, 
-            role: role || 'user', 
+            password,
+            role: role || 'user',
             phoneNumber,
-            fullName: fullName,
+            fullName,
+            isVerified: false, // New users are not verified by default
         });
 
-        await user.save(); 
+        await user.save();
 
-        res.status(201).json({
-            message: 'User registered successfully',
-            userId: user._id, 
-            username: user.username,
-            email: user.email,
-            role: user.role, 
-            fullName: user.fullName,
-            phoneNumber: user.phoneNumber,
-        });
-    } catch (error) {
-        console.error('Error during signup:', error); 
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
-};
-
-
-
-
-
-
+          // Generate email verification token
+          const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET || 'defaultsecret', { expiresIn: '1h' });
+          const verificationLink = `${process.env.CLIENT_URL}/verify-email?token=${encodeURIComponent(token)}`;
+  
+          // Send verification email
+          await sendEmail(email, 'Verify Your Email', `
+              <p>Hello ${fullName},</p>
+              <p>Please verify your email by clicking the link below:</p>
+              <a href="${verificationLink}" target="_blank">Verify Email</a>
+          `);
+  
+          res.status(201).json({ message: 'Registration successful! Please verify your email.' });
+      } catch (error) {
+          console.error('Signup Error:', error);
+          res.status(500).json({ message: 'Server error. Please try again.' });
+      }
+  };
+  
 
 
 
-
-
-
-
-
-
-
-// Signin Controller
+// Signin Controller with Verification Check
 const signin = async (req, res) => {
     const { email, password } = req.body;
 
@@ -67,44 +60,34 @@ const signin = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Use the comparePassword method to validate the password
-        const isMatch = await user.comparePassword(password); // Use the comparePassword method from the User model
+        if (!user.isVerified) {
+            return res.status(400).json({ message: 'Please verify your email before logging in' });
+        }
+
+        // Validate the password
+        const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         // Generate a token
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: '1h', // Token expiration time
+            expiresIn: '1h',
         });
 
-        // Return user details and token
         res.status(200).json({
             message: 'Sign in successful',
-            userId: user._id, // Include userId for further use
+            userId: user._id,
             username: user.username,
             email: user.email,
-            role: user.role, // Return role for client-side role-based redirection
-            token, // Send the token back to the client
+            role: user.role,
+            token,
         });
     } catch (error) {
-        console.error('Error during signin:', error); // Log the error for debugging
+        console.error('Error during signin:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Admin Signup Controller
 const adminSignup = async (req, res) => {
@@ -121,37 +104,24 @@ const adminSignup = async (req, res) => {
         admin = new User({
             username,
             email,
-            password, 
-            role: 'admin', 
+            password,
+            role: 'admin',
         });
 
-        await admin.save(); 
+        await admin.save();
 
         res.status(201).json({
             message: 'Admin registered successfully',
-            userId: admin._id, 
+            userId: admin._id,
             username: admin.username,
             email: admin.email,
-            role: admin.role 
+            role: admin.role,
         });
     } catch (error) {
         console.error('Error during admin signup:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Admin Signin Controller
 const adminSignin = async (req, res) => {
@@ -172,16 +142,15 @@ const adminSignin = async (req, res) => {
 
         // Generate a token
         const token = jwt.sign({ userId: admin._id, role: admin.role }, process.env.JWT_SECRET, {
-            expiresIn: '1h', 
+            expiresIn: '1h',
         });
 
-        // Return admin details and token
         res.status(200).json({
             message: 'Admin sign in successful',
             userId: admin._id,
             username: admin.username,
             email: admin.email,
-            role: admin.role, 
+            role: admin.role,
             token,
         });
     } catch (error) {
@@ -189,8 +158,5 @@ const adminSignin = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
-
-
-
 
 module.exports = { signup, signin, adminSignup, adminSignin };

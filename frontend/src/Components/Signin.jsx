@@ -33,8 +33,11 @@ const Signin = () => {
         localStorage.setItem('token', token); // Store token in local storage
         const userData = { username, email, userId, role };
 
-        signIn(userData);
-        //console.log('User role:', role); // Log user role
+        signIn(userData); // Update auth context
+
+        // Reset form on successful sign-in
+        setEmail('');
+        setPassword('');
 
         // Redirect based on user role
         if (role === 'admin') {
@@ -85,6 +88,11 @@ const Signin = () => {
 
       <p>
         Don't have an account? <Link to="/signup">Sign Up</Link>
+      </p>
+
+      {/* Forgot Password Link */}
+      <p>
+        <Link to="/forgot-password">Forgot Password?</Link>
       </p>
     </div>
   );

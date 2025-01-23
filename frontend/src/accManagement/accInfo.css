@@ -1,0 +1,180 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .account-info-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .account-info-card:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .avatar-container {
+    margin-bottom: 20px;
+  }
+  
+  .account-avatar {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .account-avatar:hover {
+    transform: scale(1.05);
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .info-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #4a5568;
+  }
+  
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .date-picker-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+    font-weight: normal;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .date-picker-placeholder {
+    color: #a0aec0;
+  }
+  
+  .calendar-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .date-picker-popover {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .edit-button,
+  .save-button,
+  .cancel-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-button {
+    background-color: #4299e1;
+    color: #ffffff;
+  }
+  
+  .edit-button:hover {
+    background-color: #3182ce;
+  }
+  
+  .save-button {
+    background-color: #48bb78;
+    color: #ffffff;
+  }
+  
+  .save-button:hover {
+    background-color: #38a169;
+  }
+  
+  .cancel-button {
+    background-color: #e53e3e;
+    color: #ffffff;
+  }
+  
+  .cancel-button:hover {
+    background-color: #c53030;
+  }
+  
+  .button-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .error-message {
+    color: #e53e3e;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  

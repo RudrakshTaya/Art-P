@@ -34,8 +34,8 @@ const Navbar = () => {
                         </span>
                         {isDropdownOpen && (
                             <div className="dropdown-menu">
-                                <Link to="/profile">Account Information</Link>
-                                <Link to="/orders">Order History</Link>
+                                <Link to="/account-info">Account Information</Link>
+                                <Link to="/order-history">Order History</Link>
                                 <div className="dropdown-divider"></div>
                                 <Link to="/wishlist">Wishlist</Link>
                                 <Link to="/payment-methods">Payment Methods</Link>
