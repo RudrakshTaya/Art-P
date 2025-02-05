@@ -19,6 +19,7 @@ import ForgotPassword from './MAINcomponents/forgot-pass';
 import VerifyEmail from './MAINcomponents/verifyEmail';
 import AccountInfo from './accManagement/accInfo';
 import OrderHistory from './accManagement/orderHistory';
+import WishlistPage from './accManagement/wishlist';
 const App = () => {
   return (
     <Router>
@@ -56,6 +57,7 @@ const App = () => {
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/account-info" element={<AccountInfo />} />
           <Route path="/order-history" element={<OrderHistory />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
         </Routes>
       </main>
     </Router>

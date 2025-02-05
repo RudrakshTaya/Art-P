@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './Components/useAuth'; // Import AuthProvider
 import { CartProvider } from './Context/cartContext'; // Import CartProvider
+import { WishlistProvider } from './Context/wishlistContext'; // Adjust path if needed
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider> {/* Wrap App with AuthProvider */}
       <CartProvider> {/* Wrap App with CartProvider */}
+      <WishlistProvider>
         <App />
+        </WishlistProvider>
       </CartProvider>
     </AuthProvider>
   </React.StrictMode>

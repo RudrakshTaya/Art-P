@@ -12,7 +12,7 @@ const cartRoutes = require('./src/Routes/cart.Routes');
 const productRoutes = require('./src/Routes/product.Routes');
 const adminRoutes=require('./src/Routes/admin.Routes');
 const accInfo =require('./src/Routes/accInfo.Routes');
-const orderHistory = require('./src/Routes/orderHistory.Routes');
+
 // Initialize Express app
 const app = express();
 
@@ -20,14 +20,13 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(
-  cors({
-      origin: 'http://localhost:3000', // Frontend URL
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-      allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-      credentials: true, // Allow cookies and credentials
-  })
-);
+// Add CORS middleware with appropriate settings
+app.use(cors({
+  origin: '*', // Allow the frontend Ngrok URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow necessary HTTP methods
+  credentials: true // If you need to send cookies or other credentials
+}));
+
 
 app.use(helmet()); // Add basic security headers
 app.use(express.json()); // Parse JSON request bodies
@@ -42,7 +41,7 @@ app.use('/api/ad', adminRoutes);
 
 app.use('/api/user', userVerificationRoutes);
 app.use('/api/account',accInfo);
-app.use('/api/account/order',orderHistory);
+
 
 
 // Error-handling middleware

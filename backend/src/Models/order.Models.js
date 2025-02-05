@@ -13,6 +13,11 @@ const orderSchema = new mongoose.Schema({
                 ref: 'Product', // Reference to the Product model
                 required: true,
             },
+            name:{
+                type:String,
+                required:true,
+
+            },
             quantity: {
                 type: Number,
                 required: true,
@@ -38,6 +43,27 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled'], // Order status options
         default: 'Pending',
+    },
+    paymentInfo: {
+        method: {
+            type: String,
+            enum: ['Razorpay', 'Credit Card', 'PayPal', 'Bank Transfer'], // Payment methods
+            
+        },
+        transactionId: {
+            type: String,
+             // Store the transaction ID from the payment gateway
+        },
+        paymentStatus: {
+            type: String,
+            enum: ['Pending', 'Completed', 'Failed'], // Track payment status
+            default: 'Pending',
+        },
+        paymentDate: {
+            type: Date,
+            required: true,
+            default: Date.now, // The date when the payment was made
+        },
     },
     createdAt: {
         type: Date,

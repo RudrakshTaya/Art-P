@@ -1,22 +1,15 @@
 const express = require('express');
 const authMiddleware = require('../Middleware/authMiddleware');
-const router = express.Router();
-const upload = require('../Middleware/multerMiddleware');
-const {
-    getAllProductsForUsers,
-    getProductsByTypeForUsers,
-    getProductById,
-    placeOrder,
-   
-} = require('../Controllers/product.Controllers'); // Adjust the path if necessary
+const { placeOrder, getAllProductsForUsers, getProductsByTypeForUsers, getProductById } = require('../Controllers/product.Controllers');
 
-// User routes
+const router = express.Router();
+
+// Product routes
 router.get('/products', getAllProductsForUsers);
 router.get('/products/type/:type', getProductsByTypeForUsers);
 router.get('/products/:id', getProductById);
-router.post('/placeorder', placeOrder); 
 
-
-
+// Place order route
+router.post('/placeorder', authMiddleware, placeOrder);
 
 module.exports = router;

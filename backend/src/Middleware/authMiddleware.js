@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
   try {
     // Verify token and extract user information
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    
     // Attach user information to the request object (e.g., userId, role)
     req.user = decoded;
    

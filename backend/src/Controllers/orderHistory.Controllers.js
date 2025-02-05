@@ -1,23 +1,38 @@
-// controllers/orderController.js
-const Order = require('../Models/order.Models'); // Import the Order model
+const Order = require('../Models/order.Models');
 
-// Get order history for a user
-const getUserOrderHistory = async (req, res) => {
+// Controller to fetch order history
+const getOrderHistory = async (req, res) => {
     try {
-        const userId = req.user.id; // Assuming user ID is available from middleware
+        const userId = req.user.userId; // Assuming `authMiddleware` adds user info to req
+        
+
+        // Fetch orders with related details
         const orders = await Order.find({ userId })
             .populate('products.productId', 'name price') // Populate product details
-            .populate('products.adminId', 'name'); // Populate admin details
+         //   .populate('products.adminId', 'name') // Populate admin details
+            .sort({ createdAt: -1 });
 
         if (!orders || orders.length === 0) {
-            return res.status(404).json({ message: 'No orders found for this user.' });
+            return res.status(404).json({
+                success: false,
+                message: 'No orders found for this user',
+            });
         }
-
-        res.status(200).json({ orders });
+            
+        res.status(200).json({
+            success: true,
+            message: 'Order history fetched successfully',
+            orders,
+        
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to fetch order history.', error });
+        console.error('Error fetching order history:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch orders',
+            error: error.message,
+        });
     }
 };
 
-module.exports = { getUserOrderHistory };
+module.exports = { getOrderHistory };
