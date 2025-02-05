@@ -22,7 +22,7 @@ connectDB();
 // Middleware
 // Add CORS middleware with appropriate settings
 app.use(cors({
-  origin: '*', // Allow the frontend Ngrok URL
+  origin: 'https://craftaura.vercel.app', // Allow the frontend Ngrok URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow necessary HTTP methods
   credentials: true // If you need to send cookies or other credentials
 }));
