@@ -36,7 +36,7 @@ const Signup = () => {
                 fullName: role === 'admin' ? businessName : fullName,
             };
 
-            const response = await fetch('http://localhost:5002/api/auth/signup', {
+            const response = await fetch('https://craftaura-backend.onrender.com/api/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

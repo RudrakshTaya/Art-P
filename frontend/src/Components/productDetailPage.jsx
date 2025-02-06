@@ -26,9 +26,9 @@ function ProductDetail() {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5002/api/products/${productId}`)
+        const response = await axios.get(`https://craftaura-backend.onrender.com/api/products/${productId}`)
         setProduct(response.data)
-        const relatedResponse = await axios.get(`http://localhost:5002/api/products/type/${response.data.type}`)
+        const relatedResponse = await axios.get(`https://craftaura-backend.onrender.com/api/products/type/${response.data.type}`)
         setRelatedProducts(relatedResponse.data.filter((p) => p._id !== productId).slice(0, 4))
       } catch (error) {
         console.error("Error fetching product details:", error)
@@ -81,7 +81,7 @@ function ProductDetail() {
     try {
       const token = localStorage.getItem("token")
       const orderResponse = await axios.post(
-        "http://localhost:5002/api/placeorder",
+        "https://craftaura-backend.onrender.com/api/placeorder",
         {
           products: [{ productId: product._id, quantity, size: selectedSize, color: selectedColor }],
           userId: userId,

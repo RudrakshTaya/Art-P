@@ -12,7 +12,7 @@ function Type1ProductsPage() {
   useEffect(() => {
     
     axios
-      .get('http://localhost:5002/api/products/type/Personalized Clothing and Accessories')
+      .get('https://craftaura-backend.onrender.com/api/products/type/Personalized Clothing and Accessories')
       .then((response) => {
         setProducts(response.data);
       })

@@ -15,7 +15,7 @@ const ForgotPassword = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5002/api/user/forgot-password', {
+      const response = await fetch('https://craftaura-backend.onrender.com/api/user/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

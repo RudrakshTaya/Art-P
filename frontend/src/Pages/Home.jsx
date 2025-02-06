@@ -35,7 +35,7 @@ const Home = () => {
     // Fetch card data from the backend
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5002/api/products'); // Adjust the URL to your API endpoint
+        const response = await fetch('https://craftaura-backend.onrender.com/api/products'); // Adjust the URL to your API endpoint
         if (response.ok) {
           const data = await response.json();
           // Function to shuffle array

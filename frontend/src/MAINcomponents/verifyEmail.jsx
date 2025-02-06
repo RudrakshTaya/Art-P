@@ -12,7 +12,7 @@ function VerifyEmail() {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await axios.get(`http://localhost:5002/api/user/verify-email?token=${encodeURIComponent(token)}`);
+        const response = await axios.get(`https://craftaura-backend.onrender.com/api/user/verify-email?token=${encodeURIComponent(token)}`);
         setStatus("success");
         setMessage(response.data.message);
         // Optionally redirect after success

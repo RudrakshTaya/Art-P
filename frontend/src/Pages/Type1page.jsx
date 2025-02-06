@@ -20,7 +20,7 @@ function Type1ProductsPage() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get('http://localhost:5002/api/products/type/Original Handmade Art and Decor')
+      .get('https://craftaura-backend.onrender.com/api/products/type/Original Handmade Art and Decor')
       .then((response) => {
         setProducts(response.data);
         setLoading(false);

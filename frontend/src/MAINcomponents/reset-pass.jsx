@@ -25,7 +25,7 @@ const ResetPassword = () => {
 
     try {
       // Send reset password request to the backend
-      const response = await axios.post('http://localhost:5002/api/user/reset-password', {
+      const response = await axios.post('https://craftaura-backend.onrender.com/api/user/reset-password', {
         token,
         newPassword: password,
       });

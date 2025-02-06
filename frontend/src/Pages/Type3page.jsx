@@ -12,7 +12,7 @@ function Type1ProductsPage() {
   useEffect(() => {
     // Fetch products of type 'Type1' from the backend
     axios
-      .get('http://localhost:5002/api/products/type/DIY Kits and Craft Materials')
+      .get('https://craftaura-backend.onrender.com/api/products/type/DIY Kits and Craft Materials')
       .then((response) => {
         setProducts(response.data);
       })

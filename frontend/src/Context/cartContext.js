@@ -11,7 +11,7 @@ export const CartProvider = ({ children }) => {
   const fetchCart = useCallback(async () => {
     if (userId) {
       try {
-        const response = await fetch(`http://localhost:5002/api/cart/${userId}`);
+        const response = await fetch(`https://craftaura-backend.onrender.com/api/cart/${userId}`);
         if (response.ok) {
           const data = await response.json();
           setCart(data.items || []);
@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
    
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/cart/add', {
+        await fetch('https://craftaura-backend.onrender.com/api/cart/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/cart/remove', {
+        await fetch('https://craftaura-backend.onrender.com/api/cart/remove', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = async (productId, quantity) => {
     if (userId) {
       try {
-        await fetch('http://localhost:5002/api/cart/update', {
+        await fetch('https://craftaura-backend.onrender.com/api/cart/update', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
