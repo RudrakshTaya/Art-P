@@ -24,7 +24,7 @@ function MenuPage() {
     try {
       const responses = await Promise.all(
         productTypes.map((type) =>
-          axios.get(`http://localhost:5002/api/products/type/${encodeURIComponent(type)}`)
+          axios.get(`https://craftaura-backend.onrender.com/api/products/type/${encodeURIComponent(type)}`)
         )
       );
       const newProducts = Object.fromEntries(
