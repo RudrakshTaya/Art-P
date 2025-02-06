@@ -24,7 +24,7 @@ function MenuPage() {
     try {
       const responses = await Promise.all(
         productTypes.map((type) =>
-          axios.get(`https://art-p.vercel.app/api/products/type/${encodeURIComponent(type)}`)
+          axios.get(`http://localhost:5002/api/products/type/${encodeURIComponent(type)}`)
         )
       );
       const newProducts = Object.fromEntries(
