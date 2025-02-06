@@ -104,41 +104,52 @@ function ProductDetail() {
       setProcessing(false)
     }
   }
-
-  const initiateRazorpay = (orderData) => {
-    if (window.Razorpay) {
-      const options = {
-        key: "rzp_test_lnw8y27v4NY3zx",
-        amount: orderData.total * 100,
-        currency: "INR",
-        order_id: orderData.razorpayOrderId,
-        name: "Your Company Name",
-        description: "Product Purchase",
-        image: "https://your-logo-url.com",
-        handler: (response) => {
-          alert("Payment successful!")
-          navigate("/confirmation")
-        },
-        prefill: {
-          name: "Customer Name",
-          email: "customer@example.com",
-          contact: "1234567890",
-        },
-        notes: {
-          address: "Customer address",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      }
-
-      const razorpay = new window.Razorpay(options)
-      razorpay.open()
-    } else {
-      console.error("Razorpay SDK is not loaded or initialized.")
-      alert("Failed to load Razorpay. Please try again later.")
-    }
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script")
+      script.src = "https://checkout.razorpay.com/v1/checkout.js"
+      script.onload = () => resolve(true)
+      script.onerror = () => resolve(false)
+      document.body.appendChild(script)
+    })
   }
+  const initiateRazorpay = async (orderData, navigate) => {
+    const isLoaded = await loadRazorpay()
+    
+    if (!isLoaded) {
+      alert("Failed to load Razorpay SDK. Please try again.")
+      return
+    }
+  
+    const options = {
+      key: "rzp_test_lnw8y27v4NY3zx",
+      amount: orderData.total * 100,
+      currency: "INR",
+      order_id: orderData.razorpayOrderId,
+      name: "Your Company Name",
+      description: "Product Purchase",
+      image: "https://your-logo-url.com",
+      handler: (response) => {
+        alert("Payment successful!")
+        navigate("/confirmation")
+      },
+      prefill: {
+        name: "Customer Name",
+        email: "customer@example.com",
+        contact: "1234567890",
+      },
+      notes: {
+        address: "Customer address",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    }
+  
+    const razorpay = new window.Razorpay(options)
+    razorpay.open()
+  }
+  
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription)
