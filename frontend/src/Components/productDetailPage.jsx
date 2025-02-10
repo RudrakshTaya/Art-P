@@ -249,7 +249,7 @@ function ProductDetail() {
 
         <div className="product-info">
           <h1 className="product-name">{product.name}</h1>
-          <p className="product-price">${product.price?.toFixed(2)}</p>
+          <p className="product-price">₹{product.price?.toFixed(2)}</p>
           <div className="product-rating">
             <div className="stars">{renderStarRating(product.ratings.averageRating)}</div>
             <span className="rating-count">({product.ratings.reviewCount} reviews)</span>
