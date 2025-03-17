@@ -18,13 +18,15 @@ function MenuPage() {
   const [products, setProducts] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
       const responses = await Promise.all(
         productTypes.map((type) =>
-          axios.get(`https://craftaura-backend.onrender.com/api/products/type/${encodeURIComponent(type)}`)
+          axios.get(`http://localhost:5002/api/products/type/${encodeURIComponent(type)}`)
         )
       );
       const newProducts = Object.fromEntries(
@@ -33,6 +35,8 @@ function MenuPage() {
       setProducts(newProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,6 +64,7 @@ function MenuPage() {
 
   return (
     <div className="classy-menu-page">
+      {/* HEADER */}
       <header className="classy-menu-header">
         <h1 className="classy-menu-title">Discover Unique Creations</h1>
         <div className="classy-search-bar">
@@ -74,6 +79,7 @@ function MenuPage() {
         </div>
       </header>
 
+      {/* CATEGORY NAVIGATION */}
       <nav className="classy-category-nav">
         <button
           className={`classy-category-button ${activeCategory === 'All' ? 'active' : ''}`}
@@ -92,47 +98,50 @@ function MenuPage() {
         ))}
       </nav>
 
-      {Object.entries(filteredProducts).map(([type, typeProducts]) => (
-        <section key={type} className="classy-product-section">
-          <div className="classy-product-section-heading">
-            <h2 className="classy-product-section-title">{type}</h2>
-            <Link to={`/products/type/${encodeURIComponent(type)}`} className="classy-view-all-button">
-              View All
-            </Link>
-          </div>
-          <div className="classy-product-grid">
-            {typeProducts ? (
-              typeProducts.length === 0 ? (
-                <p className="classy-no-products-message">No products available for {type}.</p>
-              ) : (
-                typeProducts.slice(0, 4).map((product) => (
-                  <ProductCard
-                    key={product._id}
-                    product={product}
-                    onProductClick={handleProductClick}
-                  />
-                ))
-              )
-            ) : (
-              Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <div key={index} className="classy-product-card-skeleton">
-                    <div className="classy-product-card-header">
-                      <div className="classy-skeleton classy-skeleton-title"></div>
-                    </div>
-                    <div className="classy-product-card-content">
-                      <div className="classy-skeleton classy-skeleton-image"></div>
-                    </div>
-                    <div className="classy-product-card-footer">
-                      <div className="classy-skeleton classy-skeleton-text"></div>
-                    </div>
-                  </div>
-                ))
-            )}
-          </div>
-        </section>
-      ))}
+      {/* LOADING STATE */}
+      {loading ? (
+        <div className="classy-loading-container">
+          {Array(4)
+            .fill(0)
+            .map((_, index) => (
+              <div key={index} className="classy-product-card-skeleton">
+                <div className="classy-skeleton classy-skeleton-title"></div>
+                <div className="classy-skeleton classy-skeleton-image"></div>
+                <div className="classy-skeleton classy-skeleton-text"></div>
+              </div>
+            ))}
+        </div>
+      ) : (
+        <>
+          {Object.values(filteredProducts).flat().length === 0 && (
+            <p className="classy-no-products-message">No matching products found.</p>
+          )}
+
+          {Object.entries(filteredProducts).map(([type, typeProducts]) => (
+            <section key={type} className="classy-product-section">
+              <div className="classy-product-section-heading">
+                <h2 className="classy-product-section-title">{type}</h2>
+                <Link to={`/products/type/${encodeURIComponent(type)}`} className="classy-view-all-button">
+                  View All
+                </Link>
+              </div>
+              <div className="classy-product-grid">
+                {typeProducts.length === 0 ? (
+                  <p className="classy-no-products-message">No products available for {type}.</p>
+                ) : (
+                  typeProducts.slice(0, 4).map((product) => (
+                    <ProductCard
+                      key={product._id}
+                      product={product}
+                      onProductClick={handleProductClick}
+                    />
+                  ))
+                )}
+              </div>
+            </section>
+          ))}
+        </>
+      )}
     </div>
   );
 }

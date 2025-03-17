@@ -33,7 +33,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("https://craftaura-backend.onrender.com/api/account/order", {
+        const response = await axios.get("http://localhost:5002/api/account/order", {
           headers: { Authorization: `Bearer ${token}` },
         })
         setOrders(response.data.orders)
@@ -61,7 +61,7 @@ const OrderHistory = () => {
   const handleReorder = async (order) => {
     try {
       await axios.post(
-        "https://craftaura-backend.onrender.com/api/reorder",
+        "http://localhost:5002/api/reorder",
         { orderId: order._id },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -76,7 +76,7 @@ const OrderHistory = () => {
   const handleCancelOrder = async (orderId) => {
     try {
       await axios.post(
-        `https://craftaura-backend.onrender.com/api/cancel-order/${orderId}`,
+        `http://localhost:5002/api/cancel-order/${orderId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

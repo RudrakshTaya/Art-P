@@ -18,7 +18,7 @@ const AdminDashboard = () => {
     discount: '',
     discountExpiresAt:'',
     isCustomizable: false,
-    customizationOptions: '',
+     customizationOptions: [],
   });
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
@@ -117,47 +117,87 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleCustomizationChange = (index, field, value) => {
+    const updatedOptions = [...formData.customizationOptions];
+  
+    if (field === "optionType" && value === "image") {
+      updatedOptions[index] = { ...updatedOptions[index], optionType: value, choices: [] }; // Remove choices for images
+    } else {
+      updatedOptions[index] = { ...updatedOptions[index], [field]: value };
+    }
+  
+    setFormData((prevData) => ({ ...prevData, customizationOptions: updatedOptions }));
+  };
+  const handleCustomizationImageUpload = (index, event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const updatedOptions = [...formData.customizationOptions];
+      updatedOptions[index] = { ...updatedOptions[index], choices: [file] }; // Store image file
+      setFormData((prevData) => ({ ...prevData, customizationOptions: updatedOptions }));
+    }
+  };
+  
+
+  const addCustomizationOption = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      customizationOptions: [
+        ...prevData.customizationOptions,
+        { optionName: "", optionType: "text", choices: [], required: false },
+      ],
+    }));
+  };
+  
+
+  const removeCustomizationOption = (index) => {
+    const updatedOptions = formData.customizationOptions.filter((_, i) => i !== index);
+    setFormData((prevData) => ({ ...prevData, customizationOptions: updatedOptions }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-
+  
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const data = new FormData();
+  
       Object.keys(formData).forEach((key) => {
-        if (key === 'images') {
-          formData.images.forEach((image) => data.append('images', image));
+        if (key === "images") {
+          formData.images.forEach((image) => data.append("images", image));
+        } else if (key === "customizationOptions") {
+          data.append("customizationOptions", JSON.stringify(formData.customizationOptions)); // ✅ Properly stringify
         } else {
           data.append(key, formData[key]);
         }
       });
-
+  
       const requestConfig = {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       };
-
+  
       if (isEditing) {
-        await axios.put(
-          `http://localhost:5002/api/ad/admin/products/${currentProductId}`,
-          data,
-          requestConfig
-        );
+        await axios.put(`http://localhost:5002/api/ad/admin/products/${currentProductId}`, data, requestConfig);
       } else {
-        await axios.post('http://localhost:5002/api/ad/admin/products', data, requestConfig);
+        await axios.post("http://localhost:5002/api/ad/admin/products", data, requestConfig);
       }
-
+  
       resetForm();
       fetchProducts();
     } catch (err) {
-      setError('Failed to save the product. Please try again.');
+      console.error("Error creating product:", err);
+      setError("Failed to save the product. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
@@ -213,7 +253,7 @@ const AdminDashboard = () => {
       discount: '',
       discountExpiresAt: '',
       isCustomizable: false,
-      customizationOptions: '',
+      customizationOptions: [],
     });
     setImagePreviews([]);
     setIsEditing(false);
@@ -274,7 +314,60 @@ const AdminDashboard = () => {
           Customizable
         </label>
         {formData.isCustomizable && (
-          <textarea name="customizationOptions" value={formData.customizationOptions} onChange={handleChange} placeholder="Customization Options (comma-separated)" />
+          <div className="customization-options">
+  <h3>Customization Options</h3>
+  {formData.customizationOptions.map((option, index) => (
+    <div key={index} className="customization-option">
+      <input
+        type="text"
+        placeholder="Option Name"
+        value={option.optionName}
+        onChange={(e) => handleCustomizationChange(index, "optionName", e.target.value)}
+        required
+      />
+      <select
+        value={option.optionType}
+        onChange={(e) => handleCustomizationChange(index, "optionType", e.target.value)}
+      >
+        <option value="text">Text</option>
+        <option value="dropdown">Dropdown</option>
+        <option value="color">Color</option>
+        <option value="image">Image</option>
+        <option value="number">Number</option>
+      </select>
+
+      {/* Show Choices input only for Dropdown */}
+      {option.optionType === "dropdown" && (
+        <input
+          type="text"
+          placeholder="Choices (comma-separated)"
+          value={option.choices.join(", ")}
+          onChange={(e) =>
+            handleCustomizationChange(index, "choices", e.target.value.split(",").map((c) => c.trim()))
+          }
+        />
+      )}
+
+      {/* Show File Input for Image Upload */}
+      {option.optionType === "image" && (
+        <input type="file" accept="image/*" onChange={(e) => handleCustomizationImageUpload(index, e)} />
+      )}
+
+      <label>
+        Required:
+        <input
+          type="checkbox"
+          checked={option.required}
+          onChange={(e) => handleCustomizationChange(index, "required", e.target.checked)}
+        />
+      </label>
+
+      <button type="button" onClick={() => removeCustomizationOption(index)}>Remove</button>
+    </div>
+  ))}
+  <button type="button" onClick={addCustomizationOption}>Add Option</button>
+</div>
+
         )}
         <input name="discount" value={formData.discount} onChange={handleChange} placeholder="Discount(%)" required type="percentage" min="0" />
         <input name="discountExpiresAt" value={formData.discountExpiresAt} onChange={handleChange} placeholder="Discount Expiration Date"required type="date"

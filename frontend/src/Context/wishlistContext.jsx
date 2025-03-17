@@ -24,7 +24,7 @@ export const WishlistProvider = ({ children }) => {
 
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://craftaura-backend.onrender.com/api/account/wishlist', {
+        const response = await axios.get('http://localhost:5002/api/account/wishlist', {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('Fetched Wishlist:', response.data.products);
@@ -48,7 +48,7 @@ export const WishlistProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'https://craftaura-backend.onrender.com/api/account/wishlist',
+        'http://localhost:5002/api/account/wishlist',
         { productId: product._id },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -72,7 +72,7 @@ export const WishlistProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.delete(
-        `https://craftaura-backend.onrender.com/api/account/wishlist/${productId}`,
+        `http://localhost:5002/api/account/wishlist/${productId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

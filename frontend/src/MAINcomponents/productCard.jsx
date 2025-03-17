@@ -105,7 +105,7 @@ const ProductCard = ({ product, onProductClick }) => {
         </div>
       </div>
       <div className="classy-product-card-footer">
-        <p className="classy-product-price">${product.price.toFixed(2)}</p>
+        <p className="classy-product-price">₹{product.price.toFixed(2)}</p>
         <div className="classy-product-rating">
           {renderStars(product.ratings.averageRating)}
           <span className="classy-rating-count">({product.ratings.reviewCount})</span>

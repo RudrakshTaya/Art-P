@@ -59,7 +59,7 @@ function AccountInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get("https://craftaura-backend.onrender.com/api/account/account-info", {
+        const response = await axios.get("http://localhost:5002/api/account/account-info", {
           headers: { Authorization: `Bearer ${token}` },
         })
         setUserInfo(response.data)
@@ -93,14 +93,14 @@ function AccountInfo() {
     try {
       if (formData.username !== userInfo.username) {
         updateRequests.push(
-          axios.put("https://craftaura-backend.onrender.com/api/account/update-username", { username: formData.username }, { headers }),
+          axios.put("http://localhost:5002/api/account/update-username", { username: formData.username }, { headers }),
         )
       }
 
       if (formData.dateOfBirth && formData.dateOfBirth !== userInfo.dateOfBirth) {
         updateRequests.push(
           axios.put(
-            "https://craftaura-backend.onrender.com/api/account/update-dob",
+            "http://localhost:5002/api/account/update-dob",
             { dateOfBirth: new Date(formData.dateOfBirth).toISOString() },
             { headers },
           ),
@@ -111,14 +111,14 @@ function AccountInfo() {
         const photoData = new FormData()
         photoData.append("profilePhoto", formData.photo)
 
-        updateRequests.push(axios.put("https://craftaura-backend.onrender.com/api/account/update-photo", photoData, { headers }))
+        updateRequests.push(axios.put("http://localhost:5002/api/account/update-photo", photoData, { headers }))
       }
 
       await Promise.all(updateRequests)
 
       setEditMode(false)
 
-      const response = await axios.get("https://craftaura-backend.onrender.com/api/account/account-info", {
+      const response = await axios.get("http://localhost:5002/api/account/account-info", {
         headers,
       })
       setUserInfo(response.data)
