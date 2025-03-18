@@ -49,11 +49,12 @@ const Navbar = () => {
 
   // Categories dropdown for desktop
   const categories = [
-    { name: "Women", link: "/category/women" },
-    { name: "Men", link: "/category/men" },
-    { name: "Kids", link: "/category/kids" },
-    { name: "Home & Living", link: "/category/home" },
-    { name: "Beauty", link: "/category/beauty" }
+    { name:  'Original Handmade Art and Decor', link: "/products/type/Original Handmade Art and Decor" },
+    { name: "Personalized Clothing and Accessories", link: "/products/type/Personalized Clothing and Accessories" },
+    { name: "DIY Kits and Craft Materials", link: "/products/type/DIY Kits and Craft Materials" },
+    { name: "Customized Home and Gift Items", link: "/products/type/Customized Home and Gift Items" },
+    { name: "Sustainable and Upcycled Crafts", link: "/products/type/Sustainable and Upcycled Crafts" },
+    { name: "Limited Edition Collaborative Products", link: "/products/type/Limited Edition Collaborative Products" }
   ];
 
   return (
