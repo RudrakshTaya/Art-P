@@ -1,41 +1,61 @@
-/* src/App.css */
-
-.app {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-form {
+.app-container {
   display: flex;
-  flex-direction: column;
+  height: 100vh;
 }
 
-input {
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 16px;
-}
-
-button {
-  padding: 10px;
-  font-size: 16px;
-  background-color: #007bff;
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #222;
   color: white;
-  border: none;
-  cursor: pointer;
+  padding: 20px;
+  transition: transform 0.3s ease, width 0.3s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+/* Content styling */
+.content {
+  flex-grow: 1;
+  margin-left: 250px; /* Ensure content moves right */
+  padding: 20px;
+  overflow-y: auto;
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
-.error-message {
-  color: red;
+/* Collapsed sidebar for mobile */
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+.content.expanded {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 80%;  /* Sidebar takes 80% width */
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Even smaller screens */
+@media screen and (max-width: 480px) {
+  .sidebar {
+    width: 85%; /* Sidebar takes more width for small screens */
+  }
 }

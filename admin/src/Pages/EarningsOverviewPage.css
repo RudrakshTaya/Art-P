@@ -1,0 +1,32 @@
+/* Earnings Overview Page */
+.earnings-overview-page {
+    padding: 20px;
+  }
+  
+  .earnings-overview-page h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .earnings {
+    text-align: center;
+    background-color: #fff;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .earnings h3 {
+    font-size: 2rem;
+    color: #4caf50;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .earnings {
+      padding: 20px;
+    }
+  }
+  

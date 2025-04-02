@@ -4,14 +4,14 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CreditCard, Truck, ShieldCheck, ArrowLeft, Gift, Info } from 'lucide-react';
-
+import { useAuth } from "../Components/useAuth";
 import "./Checkout.css";
 
 const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { cart = [], total = 0, userId } = location.state || {};
-  
+  const { cart = [], total = 0,  } = location.state || {};
+  const { userId } = useAuth();
   const [step, setStep] = useState(1); // 1: Address, 2: Payment
   const [address, setAddress] = useState({
     fullName: "",
@@ -163,25 +163,29 @@ const Checkout = () => {
       // Format address for API
       const formattedAddress = `${address.fullName}, ${address.phoneNumber}, ${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;
       
-      // Prepare order data
-      const orderResponse = await axios.post(
-        "http://localhost:5002/api/placeorder",
-        {
-          products: cart.map((item) => ({
-            productId: item.productId._id,
-            quantity: item.quantity,
-          })),
-          userId,
-          subtotal,
-          shipping,
-          discount,
-          total: finalTotal,
-          address: formattedAddress,
-          shippingMethod: deliveryOption,
-          couponCode: appliedCoupon?.code || null
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+     // Prepare order data
+// Prepare order data
+const orderResponse = await axios.post(
+  "http://localhost:5002/api/placeorder",
+  {
+    products: cart.map((item) => ({
+      productId: item.productId?._id,  // Correct product ID reference
+      quantity: item.quantity,
+      selectedCustomizations: item.selectedCustomizations || {} // Include user-selected customizations
+    })),
+    userId,
+    subtotal,
+    shipping,
+    discount,
+    total: finalTotal,
+    address: formattedAddress,
+    shippingMethod: deliveryOption,
+    couponCode: appliedCoupon?.code || null
+  },
+  { headers: { Authorization: `Bearer ${token}` } }
+);
+
+
 
       if (orderResponse.data.message === "Order placed successfully") {
         initiateRazorpay(orderResponse.data);

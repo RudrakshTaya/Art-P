@@ -1,0 +1,279 @@
+/* Ecommerce Sidebar */
+.ecommerce-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 260px;
+  background-color: #1e293b;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.ecommerce-sidebar--collapsed {
+  width: 80px;
+}
+
+/* Sidebar Header */
+.ecommerce-sidebar__header {
+  height: 70px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #172032;
+}
+
+.ecommerce-sidebar__brand {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.ecommerce-sidebar__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.ecommerce-sidebar__logo {
+  width: 40px;
+  height: 40px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+/* Sidebar Toggle */
+.ecommerce-sidebar__toggle {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.ecommerce-sidebar__toggle:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.ecommerce-sidebar--collapsed .ecommerce-sidebar__toggle {
+  transform: rotate(180deg);
+}
+
+/* Sidebar Content */
+.ecommerce-sidebar__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.ecommerce-sidebar__content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.ecommerce-sidebar__content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+/* Sidebar Menu */
+.ecommerce-sidebar__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ecommerce-sidebar__item {
+  margin-bottom: 5px;
+}
+
+.ecommerce-sidebar__link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #a0aec0;
+  transition: all 0.2s ease;
+  border-radius: 0;
+}
+
+.ecommerce-sidebar__link:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+.ecommerce-sidebar__link--active {
+  background-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+}
+
+/* Sidebar Icons */
+.ecommerce-sidebar__icon {
+  font-size: 18px;
+  min-width: 24px;
+  margin-right: 12px;
+  text-align: center;
+}
+
+.ecommerce-sidebar--collapsed .ecommerce-sidebar__icon {
+  margin-right: 0;
+}
+
+/* Sidebar Labels */
+.ecommerce-sidebar__label {
+  white-space: nowrap;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+
+.ecommerce-sidebar--collapsed .ecommerce-sidebar__label {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Sidebar Footer */
+.ecommerce-sidebar__footer {
+  padding: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ecommerce-sidebar__logout {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: rgba(239, 68, 68, 0.15);
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  font-size: 15px;
+  text-align: left;
+  width: 100%;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.ecommerce-sidebar__logout:hover {
+  background-color: rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+}
+
+/* Mobile Sidebar Overlay */
+.ecommerce-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+/* Mobile Toggle Button */
+.ecommerce-sidebar__mobile-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  width: 45px;
+  height: 45px;
+  background-color: #1e293b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 998;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🔹 Mobile Responsive Fixes */
+@media screen and (max-width: 768px) {
+  .ecommerce-sidebar {
+      transform: translateX(-100%);
+      width: 260px;
+  }
+  
+  .ecommerce-sidebar--collapsed {
+      transform: translateX(-100%);
+  }
+  
+  .ecommerce-sidebar:not(.ecommerce-sidebar--collapsed) {
+      transform: translateX(0);
+  }
+  
+  .ecommerce-sidebar-overlay {
+      display: block;
+  }
+  
+  .ecommerce-sidebar__label {
+      opacity: 1;
+      width: auto;
+      height: auto;
+  }
+  
+  .ecommerce-sidebar__icon {
+      margin-right: 12px;
+  }
+
+  /* Fix Logo Overlap */
+  .ecommerce-sidebar__brand {
+      justify-content: center;
+  }
+
+  .ecommerce-sidebar__logo {
+      width: 35px;
+      height: 35px;
+      font-size: 16px;
+  }
+
+  .ecommerce-sidebar__title {
+      font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ecommerce-sidebar {
+      width: 85%;
+  }
+
+  .ecommerce-sidebar__title {
+      font-size: 16px;
+  }
+
+  .ecommerce-sidebar__logo {
+      width: 30px;
+      height: 30px;
+      font-size: 14px;
+  }
+
+  .ecommerce-sidebar__mobile-toggle {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+  }
+}

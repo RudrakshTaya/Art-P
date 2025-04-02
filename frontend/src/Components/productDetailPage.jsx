@@ -15,6 +15,9 @@ import {
   Truck,
   Shield,
   Clock,
+  Camera,
+  Palette,
+  Type
 } from "lucide-react";
 import "./productDetailPage.css";
 
@@ -23,13 +26,14 @@ const API_BASE_URL = "http://localhost:5002/api";
 
 // Utility Functions
 const calculateFinalPrice = (price, discount) => {
-  if (discount && discount.percentage && new Date(discount.expiresAt) > new Date()) {
+  if (discount && discount.percentage && discount.percentage > 0 && new Date(discount.expiresAt) > new Date()) {
     return price * (1 - discount.percentage / 100);
   }
   return price;
 };
 
 const formatDate = (dateString) => {
+  if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 };
@@ -47,48 +51,135 @@ const getStockStatusClass = (stock) => {
 };
 
 // Subcomponents
-const ImageGallery = ({ images, currentImageIndex, setCurrentImageIndex }) => (
-  <div className="image-gallery">
-    <div className="main-image-container">
-      <img
-        className="main-image"
-        src={images[currentImageIndex]?.url || "/placeholder.svg"}
-        alt={images[currentImageIndex]?.altText || "Product Image"}
-      />
+const ImageGallery = ({ images, currentImageIndex, setCurrentImageIndex }) => {
+  if (!images || images.length === 0) {
+    return (
+      <div className="image-gallery">
+        <div className="main-image-container">
+          <img
+            className="main-image"
+            src="/placeholder.svg"
+            alt="Product placeholder"
+          />
+        </div>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="image-gallery">
+      <div className="main-image-container">
+        <img
+          className="main-image"
+          src={images[currentImageIndex]?.url || "/placeholder.svg"}
+          alt={images[currentImageIndex]?.altText || "Product Image"}
+        />
+        {images.length > 1 && (
+          <div className="image-nav">
+            <button
+              className="nav-button prev"
+              onClick={() => setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+            >
+              <ArrowLeft />
+            </button>
+            <button
+              className="nav-button next"
+              onClick={() => setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+            >
+              <ArrowRight />
+            </button>
+          </div>
+        )}
+      </div>
       {images.length > 1 && (
-        <div className="image-nav">
-          <button
-            className="nav-button prev"
-            onClick={() => setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
-          >
-            <ArrowLeft />
-          </button>
-          <button
-            className="nav-button next"
-            onClick={() => setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
-          >
-            <ArrowRight />
-          </button>
+        <div className="thumbnails">
+          {images.map((image, index) => (
+            <img
+              key={image.url || `img-${index}`}
+              src={image.url || "/placeholder.svg"}
+              alt={image.altText || `Thumbnail ${index + 1}`}
+              className={index === currentImageIndex ? "active" : ""}
+              onClick={() => setCurrentImageIndex(index)}
+            />
+          ))}
         </div>
       )}
     </div>
-    {images.length > 1 && (
-      <div className="thumbnails">
-        {images.map((image, index) => (
-          <img
-            key={image.url || `img-${index}`}
-            src={image.url || "/placeholder.svg"}
-            alt={image.altText || `Thumbnail ${index + 1}`}
-            className={index === currentImageIndex ? "active" : ""}
-            onClick={() => setCurrentImageIndex(index)}
-          />
-        ))}
+  );
+};
+
+const CustomizationOption = ({ option, selectedCustomizations, handleCustomizationChange }) => {
+  if (option.optionType === "color") {
+    return (
+      <div className="customization-option">
+        <label>
+          {option.optionName} {option.required && <span className="required">*</span>}
+        </label>
+        <div className="color-options">
+          {option.choices?.map((color, idx) => (
+            <div 
+              key={`${color}-${idx}`}
+              className={`color-option ${selectedCustomizations[option.optionName] === color ? 'selected' : ''}`}
+              style={{ backgroundColor: color }}
+              onClick={() => handleCustomizationChange(option.optionName, color)}
+              title={color}
+            />
+          ))}
+        </div>
       </div>
-    )}
-  </div>
-);
-
-
+    );
+  }
+  
+  if (option.optionType === "text") {
+    return (
+      <div className="customization-option">
+        <label>
+          {option.optionName} {option.required && <span className="required">*</span>}
+          <Type className="input-icon" size={16} />
+        </label>
+        <input
+          type="text"
+          placeholder={`Enter ${option.optionName}`}
+          value={selectedCustomizations[option.optionName] || ""}
+          onChange={(e) => handleCustomizationChange(option.optionName, e.target.value)}
+          className="customization-input"
+        />
+      </div>
+    );
+  }
+  
+  if (option.optionType === "image") {
+    return (
+      <div className="customization-option">
+        <label>
+          {option.optionName} {option.required && <span className="required">*</span>}
+          <Camera className="input-icon" size={16} />
+        </label>
+        <div className="image-upload">
+          <input
+            type="file"
+            id={`image-${option.optionName}`}
+            accept="image/*"
+            onChange={(e) => handleCustomizationChange(option.optionName, e.target.files?.[0])}
+            className="customization-file"
+          />
+          <label htmlFor={`image-${option.optionName}`} className="file-upload-button">
+            <span>Choose Image</span>
+          </label>
+          {selectedCustomizations[option.optionName] && (
+            <span className="file-name">{
+              typeof selectedCustomizations[option.optionName] === 'string'
+                ? selectedCustomizations[option.optionName]
+                : selectedCustomizations[option.optionName]?.name || 'Selected'
+            }</span>
+          )}
+        </div>
+      </div>
+    );
+  }
+  
+  return null;
+};
 
 // Main Component
 function ProductDetail() {
@@ -103,7 +194,7 @@ function ProductDetail() {
   const [selectedCustomizations, setSelectedCustomizations] = useState({});
   const [activeTab, setActiveTab] = useState("description");
   const [processing, setProcessing] = useState(false);
-
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { userId } = useAuth();
@@ -113,21 +204,29 @@ function ProductDetail() {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${API_BASE_URL}/products/${productId}`);
         setProduct(response.data);
-
+        
+        // Initialize customizations
         if (response.data.customizationOptions?.length > 0) {
           const initialCustomizations = {};
           response.data.customizationOptions.forEach((option) => {
-            if (option.defaultValue) {
+            if (option.choices && option.choices.length > 0) {
+              initialCustomizations[option.optionName] = option.choices[0];
+            } else if (option.defaultValue) {
               initialCustomizations[option.optionName] = option.defaultValue;
             }
           });
           setSelectedCustomizations(initialCustomizations);
         }
 
+        // Fetch related products
         const relatedResponse = await axios.get(`${API_BASE_URL}/products/type/${response.data.category}`);
         setRelatedProducts(relatedResponse.data.filter((p) => p._id !== productId).slice(0, 4));
+        
+        // Update recently viewed products in localStorage
+        updateRecentlyViewed(response.data);
       } catch (error) {
         console.error("Error fetching product details:", error);
         setError("Failed to load product details. Please try again later.");
@@ -138,62 +237,134 @@ function ProductDetail() {
 
     fetchProductDetails();
   }, [productId]);
+  
+  // Handle recently viewed products
+  const updateRecentlyViewed = (currentProduct) => {
+    try {
+      const storedItems = localStorage.getItem('recentlyViewed');
+      let recentItems = storedItems ? JSON.parse(storedItems) : [];
+      
+      // Remove current product if it exists in history
+      recentItems = recentItems.filter(item => item._id !== currentProduct._id);
+      
+      // Add current product to beginning of array
+      recentItems.unshift({
+        _id: currentProduct._id,
+        name: currentProduct.name,
+        price: currentProduct.price,
+        image: currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0].url : '/placeholder.svg'
+      });
+      
+      // Limit to 5 items
+      if (recentItems.length > 5) recentItems = recentItems.slice(0, 5);
+      
+      // Update state and localStorage
+      setRecentlyViewed(recentItems);
+      localStorage.setItem('recentlyViewed', JSON.stringify(recentItems));
+    } catch (err) {
+      console.error("Error updating recently viewed products:", err);
+    }
+  };
 
-  const handleCustomizationChange = useCallback((optionName, value) => {
-    setSelectedCustomizations((prev) => ({ ...prev, [optionName]: value }));
-  }, []);
-
-  const handleAddToCart = useCallback(
-    async (e) => {
-      e.stopPropagation();
-      if (!userId) {
-        alert("You need to be logged in to add items to the cart.");
-        navigate("/signin");
-        return;
+  useEffect(() => {
+    // Load recently viewed products from localStorage
+    try {
+      const storedItems = localStorage.getItem('recentlyViewed');
+      if (storedItems) {
+        const recentItems = JSON.parse(storedItems);
+        setRecentlyViewed(recentItems.filter(item => item._id !== productId));
       }
+    } catch (err) {
+      console.error("Error loading recently viewed products:", err);
+    }
+  }, [productId]);
 
-      setProcessing(true);
-      try {
-        await addToCart(product, quantity);
+  const handleCustomizationChange = (optionName, value) => {
+    setSelectedCustomizations(prev => ({ ...prev, [optionName]: value }));
+  };
+
+  const validateCustomizations = () => {
+    if (!product?.customizationOptions?.length) return true;
+    
+    for (const option of product.customizationOptions) {
+      if (option.required && !selectedCustomizations[option.optionName]) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+ const handleAddToCart = useCallback(
+  async (e) => {
+    if (e) e.preventDefault();
+
+    if (!userId) {
+      alert("You need to be logged in to add items to the cart.");
+      navigate("/signin");
+      return;
+    }
+
+
+    setProcessing(true);
+    try {
+      console.log("🛒 Adding to Cart:", {
+        productId: product._id,
+        quantity,
+        selectedCustomizations,
+      });
+
+      // Pass `selectedCustomizations` separately
+      const success = await addToCart(product, quantity, selectedCustomizations);
+
+      if (success) {
         alert("Added to cart successfully!");
-        navigate("/cart");
-      } catch (error) {
-        console.error("Error adding to cart:", error);
-        alert("An error occurred while adding to cart. Please try again later.");
-      } finally {
-        setProcessing(false);
+      } else {
+        alert("Failed to add to cart. Please try again.");
       }
-    },
-    [userId, product, quantity, addToCart, navigate]
-  );
-const handleBuyNow = useCallback(() => {
-  if (!product.stock || product.stock <= 0) {
-    alert("Sorry, this product is out of stock.");
-    return;
-  }
+    } catch (error) {
+      console.error("❌ Error adding to cart:", error);
+      alert("An error occurred while adding to cart. Please try again later.");
+    } finally {
+      setProcessing(false);
+    }
+  },
+  [userId, product, quantity, selectedCustomizations, addToCart, navigate]
+);
 
-  if (product?.customizationOptions?.some((opt) => opt.required && !selectedCustomizations[opt.optionName])) {
-    alert("Please select all required customizations before proceeding to checkout.");
-    return;
-  }
+  
+  const handleBuyNow = useCallback(async () => {
+    if (!product.stock || product.stock <= 0) {
+      alert("Sorry, this product is out of stock.");
+      return;
+    }
 
-  handleAddToCart(); // Ensure this updates cart state correctly
+    if (!validateCustomizations()) {
+      alert("Please select all required customizations before proceeding to checkout.");
+      return;
+    }
 
-  setTimeout(() => { // Delay navigation slightly to ensure cart updates
-    navigate("/checkout", {
-      state: {
-        
-        userId
-      }
-    });
-  }, 100); // Adjust delay if necessary
-
-}, [product, selectedCustomizations,  userId, handleAddToCart, navigate]);
-
+    const success = await handleAddToCart();
+    if (success) {
+      navigate("/checkout", {
+        state: {
+          userId,
+          directCheckout: true,
+          items: [{
+            product: {
+              ...product,
+              selectedCustomizations
+            },
+            quantity
+          }]
+        }
+      });
+    }
+  }, [product, selectedCustomizations, quantity, userId, handleAddToCart, navigate]);
 
   const handleAddToWishlist = useCallback(
     async (e) => {
-      e.stopPropagation();
+      e.preventDefault();
       if (!userId) {
         alert("You need to be logged in to add items to your wishlist.");
         navigate("/signin");
@@ -235,12 +406,37 @@ const handleBuyNow = useCallback(() => {
     }
   }, [product]);
 
-  if (loading) return <div className="loading-container">Loading product details...</div>;
-  if (error) return <div className="error-container">Error: {error}</div>;
-  if (!product) return <div className="not-found-container">Product not found.</div>;
+  if (loading) return (
+    <div className="loading-container">
+      <div className="loader"></div>
+      <p>Loading product details...</p>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="error-container">
+      <h2>Oops! Something went wrong</h2>
+      <p>{error}</p>
+      <button onClick={() => navigate('/')}>Return to Home</button>
+    </div>
+  );
+  
+  if (!product) return (
+    <div className="not-found-container">
+      <h2>Product not found</h2>
+      <p>The product you're looking for might be unavailable or removed.</p>
+      <button onClick={() => navigate('/')}>Browse Products</button>
+    </div>
+  );
 
   return (
     <div className="product-detail-container">
+      <div className="breadcrumbs">
+        <Link to="/">Home</Link> &gt; 
+        <Link to={`/category/${product.category}`}>{product.category}</Link> &gt; 
+        <span>{product.name}</span>
+      </div>
+      
       <div className="product-content">
         <ImageGallery
           images={product.images}
@@ -260,6 +456,7 @@ const handleBuyNow = useCallback(() => {
                         key={i}
                         fill={i < Math.round(product.ratings.averageRating) ? "#FFD700" : "none"}
                         stroke="#FFD700"
+                        size={18}
                       />
                     ))}
                   </div>
@@ -270,7 +467,7 @@ const handleBuyNow = useCallback(() => {
             </div>
           </div>
           <div className="product-pricing">
-            {product.discount && product.discount.percentage && new Date(product.discount.expiresAt) > new Date() ? (
+            {product.discount && product.discount.percentage && product.discount.percentage > 0 && product.discount.expiresAt && new Date(product.discount.expiresAt) > new Date() ? (
               <>
                 <p className="original-price">₹{product.price?.toFixed(2)}</p>
                 <p className="sale-price">₹{calculateFinalPrice(product.price, product.discount).toFixed(2)}</p>
@@ -297,49 +494,21 @@ const handleBuyNow = useCallback(() => {
               </button>
             )}
           </div>
+          
           {product?.customizationOptions?.length > 0 && (
             <div className="customization-options">
               <h3>Customization Options</h3>
               {product.customizationOptions.map((option, index) => (
-                <div key={`${option.optionName}-${index}`} className="customization-option">
-                  <label>
-                    {option.optionName} {option.required && <span className="required">*</span>}
-                  </label>
-                  {option.optionType === "text" && (
-                    <input
-                      type="text"
-                      placeholder={`Enter ${option.optionName}`}
-                      value={selectedCustomizations[option.optionName] || ""}
-                      onChange={(e) => handleCustomizationChange(option.optionName, e.target.value)}
-                      className="customization-input"
-                    />
-                  )}
-                  {option.optionType === "select" && option.values?.length > 0 && (
-                    <select
-                      value={selectedCustomizations[option.optionName] || ""}
-                      onChange={(e) => handleCustomizationChange(option.optionName, e.target.value)}
-                      className="customization-select"
-                    >
-                      <option value="">Select {option.optionName}</option>
-                      {option.values.map((value, idx) => (
-                        <option key={`${value}-${idx}`} value={value}>
-                          {value}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                  {option.optionType === "image" && (
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleCustomizationChange(option.optionName, e.target.files?.[0])}
-                      className="customization-file"
-                    />
-                  )}
-                </div>
+                <CustomizationOption
+                  key={`${option.optionName}-${index}`}
+                  option={option}
+                  selectedCustomizations={selectedCustomizations}
+                  handleCustomizationChange={handleCustomizationChange}
+                />
               ))}
             </div>
           )}
+          
           <div className="quantity-selection">
             <h3>Quantity:</h3>
             <div className="quantity-controls">
@@ -371,12 +540,12 @@ const handleBuyNow = useCallback(() => {
               onClick={handleAddToCart}
               disabled={product.stock <= 0 || processing}
             >
-              Add to Cart
+              {processing ? "Adding..." : "Add to Cart"}
             </button>
             <button
               className="buy-now-button"
               onClick={handleBuyNow}
-              disabled={product.stock <= 0}
+              disabled={product.stock <= 0 || processing}
             >
               Buy Now
             </button>
@@ -442,9 +611,12 @@ const handleBuyNow = useCallback(() => {
               <div className="attributes">
                 <h4>Features</h4>
                 <ul>
-                  {product.attributes.split(',').map((attribute, index) => (
-                    <li key={index}>{attribute.trim()}</li>
-                  ))}
+                  {typeof product.attributes === 'string' 
+                    ? product.attributes.split(',').map((attribute, index) => (
+                        <li key={index}>{attribute.trim()}</li>
+                      ))
+                    : <li>{product.attributes}</li>
+                  }
                 </ul>
               </div>
             )}
@@ -469,7 +641,7 @@ const handleBuyNow = useCallback(() => {
                 {product.attributes && (
                   <tr>
                     <th>Type</th>
-                    <td>{product.attributes}</td>
+                    <td>{typeof product.attributes === 'string' ? product.attributes : JSON.stringify(product.attributes)}</td>
                   </tr>
                 )}
                 {product.isCustomizable && (
@@ -502,14 +674,18 @@ const handleBuyNow = useCallback(() => {
                   <p>Based on {product.ratings.reviewCount} reviews</p>
                 </div>
                 <div className="review-list">
-                  {/* This would be populated with actual reviews from an API call */}
-                  <p>Reviews would be displayed here</p>
+                  <p>No reviews available yet</p>
+                  <button className="write-review-button" onClick={() => navigate(`/write-review/${product._id}`)}>
+                    Be the first to review
+                  </button>
                 </div>
               </div>
             ) : (
               <div className="no-reviews">
                 <p>This product has no reviews yet. Be the first to review!</p>
-                <button className="write-review-button">Write a Review</button>
+                <button className="write-review-button" onClick={() => navigate(`/write-review/${product._id}`)}>
+                  Write a Review
+                </button>
               </div>
             )}
           </div>
@@ -546,8 +722,8 @@ const handleBuyNow = useCallback(() => {
               <Link to={`/products/${relatedProduct._id}`}>
                 <div className="product-image">
                   <img 
-                    src={relatedProduct.images[0]?.url || "/placeholder.svg"} 
-                    alt={relatedProduct.images[0]?.altText || relatedProduct.name} 
+                    src={relatedProduct.images && relatedProduct.images[0]?.url || "/placeholder.svg"} 
+                    alt={relatedProduct.images && relatedProduct.images[0]?.altText || relatedProduct.name} 
                   />
                 </div>
                 <div className="product-info">
@@ -561,16 +737,33 @@ const handleBuyNow = useCallback(() => {
       </div>
     )}
 
-    {/* Recently viewed section would be populated by maintaining view history in localStorage or context */}
     <div className="recently-viewed">
       <h2>Recently Viewed</h2>
       <div className="product-carousel">
-        {/* Content would be populated dynamically */}
-        <p>You have no recently viewed items</p>
+        {recentlyViewed.length > 0 ? (
+          recentlyViewed.map((item) => (
+            <div key={item._id} className="related-product-card">
+              <Link to={`/products/${item._id}`}>
+                <div className="product-image">
+                  <img 
+                    src={item.image || "/placeholder.svg"} 
+                    alt={item.name} 
+                  />
+                </div>
+                <div className="product-info">
+                  <h3>{item.name}</h3>
+                  <p className="price">₹{item.price.toFixed(2)}</p>
+                </div>
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p>You have no recently viewed items</p>
+        )}
       </div>
     </div>
   </div>
-)
+  );
 }
 
-export default ProductDetail
+export default ProductDetail;

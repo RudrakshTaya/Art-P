@@ -201,7 +201,12 @@ function CategoryProductsPage() {
               <ChevronDown size={16} className="sort-icon" />
             </div>
 
-           
+            <button 
+              className={`filters-toggle ${showFilters ? 'active' : ''}`} 
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <Sliders size={18} /> {isMobile ? '' : (showFilters ? 'Hide Filters' : 'Show Filters')}
+            </button>
           </div>
         </div>
       </div>

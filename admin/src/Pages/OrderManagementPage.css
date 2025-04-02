@@ -1,0 +1,242 @@
+/* OrderManagementPage.css */
+
+/* Base Styles */
+.order-management-container {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.header-actions .ant-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Stats Container */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stats-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.stats-container .ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stats-container .ant-statistic-title {
+  font-size: 14px;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.stats-container .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Filters Container */
+.filters-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filters-container .ant-input-search {
+  max-width: 400px;
+}
+
+.filters-container .ant-select {
+  min-width: 200px;
+}
+
+/* Table Styles */
+.orders-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+}
+
+.orders-table-container .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.orders-table-container .ant-table-thead > tr > th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.orders-table-container .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.orders-table-container .ant-table-tbody > tr:hover > td {
+  background-color: #f8f9fa !important;
+}
+
+/* Order ID */
+.order-id {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #3498db;
+}
+
+/* Customer Info */
+.customer-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.customer-customization .ant-tag {
+  margin-right: 0;
+}
+
+/* Product Items */
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.product-name {
+  color: #2c3e50;
+}
+
+.product-qty {
+  color: #7f8c8d;
+  font-size: 12px;
+}
+
+/* Status Select */
+.ant-select-selection-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Error State */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  text-align: center;
+}
+
+.error-container h2 {
+  color: #ff4d4f;
+  margin: 16px 0;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .filters-container {
+    flex-direction: column;
+  }
+  
+  .filters-container .ant-input-search {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .order-management-container {
+    padding: 16px;
+  }
+}
+
+/* Custom Status Colors */
+.ant-tag-warning {
+  background-color: #fffbe6;
+  border-color: #ffe58f;
+  color: #faad14;
+}
+
+.ant-tag-processing {
+  background-color: #e6f7ff;
+  border-color: #91d5ff;
+  color: #1890ff;
+}
+
+.ant-tag-geekblue {
+  background-color: #f0f5ff;
+  border-color: #adc6ff;
+  color: #2f54eb;
+}
+
+.ant-tag-success {
+  background-color: #f6ffed;
+  border-color: #b7eb8f;
+  color: #52c41a;
+}
+
+.ant-tag-error {
+  background-color: #fff2f0;
+  border-color: #ffccc7;
+  color: #ff4d4f;
+}
+
+/* Table Row Striping */
+.ant-table-tbody > tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Action Buttons */
+.ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.ant-btn-primary:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}

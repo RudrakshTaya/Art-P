@@ -45,7 +45,7 @@ const ProductCard = ({ product, onProductClick }) => {
       setIsInWishlist(checkIfInWishlist(product._id));
     }
   }, [userId, product._id, checkIfInWishlist]);
-console.log(product.stock)
+
   // Reset image loaded state when changing images
   useEffect(() => {
     setImageLoaded(false);
